@@ -1,0 +1,15 @@
+image: ruby:2.1
+stages:
+  - build
+
+job:
+  stage: build
+  script:
+    - echo "Restoring NuGet Packages..."
+    - ''
+    - echo "Release build..."
+  tags: 
+    - kubernetes
+  except:
+    - tags
+

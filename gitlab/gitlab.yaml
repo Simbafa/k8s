@@ -1,0 +1,272 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: gitlab
+  labels:
+    name: redis
+spec:
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: redis
+  selector:
+    name: redis
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: gitlab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: redis
+      labels:
+        name: redis
+    spec:
+      nodeName: k8s-node1
+      nodeSelector:
+        cloudx5.com/role: system
+      containers:
+      - name: redis
+        image: hub.cloudx5.com/justep/redis:4-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: redis
+          containerPort: 6379
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+      volumes:
+      - name: data
+        hostPath:
+          path: /store/gitlab/data/redis
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: gitlab
+  labels:
+    name: postgresql
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+  selector:
+    name: postgresql
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgresql
+  namespace: gitlab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: postgresql
+      labels:
+        name: postgresql
+    spec:
+      nodeName: k8s-node1
+      nodeSelector:
+        cloudx5.com/role: system
+      containers:
+      - name: postgresql
+        image: hub.cloudx5.com/justep/postgres:9.5
+        args: ["-c","shared_buffers=512MB","-c","max_connections=500"]
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POSTGRES_USER
+          value: gitlab
+        - name: POSTGRES_PASSWORD
+          value: passw0rd
+        - name: POSTGRES_DB
+          value: gitlab_production
+        ports:
+        - name: postgres
+          containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -h
+            - localhost
+            - -U
+            - postgres
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -h
+            - localhost
+            - -U
+            - postgres
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+      volumes:
+      - name: data
+        hostPath:
+          path: /store/gitlab/data/postgres
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab
+  namespace: gitlab
+  labels:
+    name: gitlab
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: ssh
+      port: 22
+      targetPort: ssh
+    - name: prometheus
+      port: 9090
+      targetPort: prometheus
+  selector:
+    name: gitlab
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gitlab
+  namespace: gitlab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: gitlab
+      labels:
+        name: gitlab
+    spec:
+      serviceAccountName: gitlab
+      nodeName: k8s-node1
+      nodeSelector:
+        cloudx5.com/role: system
+      volumes:
+      - name: data
+        hostPath:
+          path: /store/gitlab/data/gitlab/data
+      - name: config
+        hostPath:
+          path: /store/gitlab/data/gitlab/config
+      - name: logs
+        hostPath:
+          path: /store/gitlab/data/gitlab/logs
+      - name: config-volume
+        configMap: 
+          name: gitlab-rb
+      containers:
+      - name: gitlab
+        image: gitlab/gitlab-ce:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /var/log/gitlab
+          name: logs
+        - mountPath: /var/opt/gitlab
+          name: data
+        - mountPath: "/etc/gitlab/gitlab.rb"
+          name: config-volume
+          subPath: gitlab.rb
+        env:
+        - name: TZ
+          value: Asia/BeiJing
+        - name: GITLAB_TIMEZONE
+          value: BeiJing
+
+        - name: GITLAB_SECRETS_DB_KEY_BASE
+          value: rVhTJmMMnn3RCwxXV7HCTNTkJXWLPjJhNHM3sWTgKwnqnNVTwNCVJ7zPLzKgVz7z
+        - name: GITLAB_SECRETS_SECRET_KEY_BASE
+          value: VkT7bxtXRsgvLpqRgbVnJKfjTMs7TsWrkXfmntPvbNWRLc4dxK9cWkLNpnNNvmsM
+        - name: GITLAB_SECRETS_OTP_KEY_BASE
+          value: Xgksv7WKTvWVrNm9vcvbdgMnVqXLPb3F9XvbFLXNLTTXtzcvJgp7nTrdbxN444Jt
+
+        - name: GITLAB_ROOT_PASSWORD
+          value: justep@1234
+        - name: GITLAB_ROOT_EMAIL
+          value: gitlab@justep.com
+
+        - name: GITLAB_HOST
+          value: git.default.svc.cluster.local
+        - name: GITLAB_PORT
+          value: "80"
+        - name: GITLAB_SSH_PORT
+          value: "22"
+
+        - name: GITLAB_NOTIFY_ON_BROKEN_BUILDS
+          value: "true"
+        - name: GITLAB_NOTIFY_PUSHER
+          value: "false"
+
+        - name: GITLAB_BACKUP_SCHEDULE
+          value: daily
+        - name: GITLAB_BACKUP_TIME
+          value: 01:00
+
+        - name: DB_TYPE
+          value: postgres
+        - name: DB_HOST
+          value: postgresql
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: gitlab
+        - name: DB_PASS
+          value: passw0rd
+        - name: DB_NAME
+          value: gitlab_production
+
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"
+
+        ports:
+        - name: http
+          containerPort: 80
+        - name: ssh
+          containerPort: 22
+        - name: prometheus
+          containerPort: 9090
+        - name: node-exporter
+          containerPort: 9100
+        - name: redis-exporter
+          containerPort: 9121
+        - name: postgres-export
+          containerPort: 9187
+        - name: gitlab-monitor
+          containerPort: 9168
