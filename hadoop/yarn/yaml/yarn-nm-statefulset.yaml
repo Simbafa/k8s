@@ -35,7 +35,7 @@ spec:
       - name: hub.cloudx5.com   # 镜像拉取秘钥
       containers:
       - name: yarn-nm
-        image: hub.cloudx5.com/justep/yarn-nm:1.0.0
+        image: hub.cloudx5.com/justep/yarn-nm-spark:1.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8088
