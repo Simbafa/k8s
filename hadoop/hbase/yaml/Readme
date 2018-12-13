@@ -1,0 +1,58 @@
+如果在一个节点上直接start-hbase  则会自动先执行hbase-daemon.sh start master，  同时读取regionserver文件中的地址（默认local）然后ssh上去（所系需要免密登录）然后在上面执行hbase-daemon.sh start regionserver
+
+
+在pod里面没法免密登录
+
+
+注意：HBase中master之间、regionserver之间、master与regionserver之间都是通过hostname来彼此识别对方的，而k8s的DNS只针对service并没有对Pod进行解析。
+
+所在我们在一个节点上启动hbase-daemon.sh start master    这个master会把pod的hostname注册到zookeeper，
+
+在另一个节点启动hbase-daemon.sh start regionserver   接收zookeeper中的master的pod的hostname，但是regionserver识别不了pod名称（因为k8s不进行hostname的DNS只进行服务的DNS）所以需要host映射
+
+如果进行host映射，就需要pod名称固定名称，，因此只能用pod不能用deploy，所以要设置pod重启策略为总是重启
+
+
+但是又不能在host中添加多个pod名称的对应ip  不然会创建多个，其中又是报错的。（好像无所谓）
+
+
+当已经存在数据表格时再创建master或者region，就会重新分片，这样就会消耗比较长的时间才能完成初始化（好像就不能初始化完成）
+
+两个regionserver的pod  会看到4个regionserver，两个pod名称的，两个ip的，但是ip的没有num.regions，所以需要重启
+
+进入regionserver的pod   重启/opt/hbase/bin/hbase-daemon.sh  restart regionserver则能正常完成
+
+
+
+在daskboard中查看，会发现激活的master中有tasks始终在运行未完成，需要等一段时间才能完成。
+
+可以在daskboard中查看hbase的信息
+服务器ip:nodeport，也就是60001对应的端口
+
+登录激活的master中
+
+hbase shell
+whoami
+list      # 如果list出错，说正在初始化中，要等待，可以在dashboard中看
+create 'test','id','name'
+put 'test','test1','id:5','addon'
+get 'test','test1'
+
+exists 't1'
+create 't1',{NAME => 'f1', VERSIONS => 2},{NAME => 'f2', VERSIONS => 2}
+describe 't1'
+disable 't1'
+alter 't1',{NAME=>'f11', VERSIONS => 2},{NAME=>'f12', VERSIONS => 2}
+enable 't1'
+put 't1','rowkey001','f11:col1','value01'
+get 't1','rowkey001', 'f11:col1'
+
+去另一个master查询
+hbase shell
+list
+get 't1','rowkey001', 'f11:col1'
+
+
+
+
+

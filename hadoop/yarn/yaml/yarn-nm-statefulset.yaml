@@ -1,0 +1,71 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: yarn-nm
+  namespace: cloudai-2
+  labels:
+    component: yarn-nm
+spec:
+  ports:
+  - port: 8088
+    name: web
+  - port: 8082
+    name: web2
+  # *.yarn-nm.yarn-cluster.svc.cluster.local
+  clusterIP: None
+  selector:
+    component: yarn-nm
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: yarn-nm
+  namespace: cloudai-2
+spec:
+  serviceName: "yarn-nm"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        component: yarn-nm
+    spec:
+      terminationGracePeriodSeconds: 0
+      imagePullSecrets:
+      - name: hub.cloudx5.com   # 镜像拉取秘钥
+      containers:
+      - name: yarn-nm
+        image: hub.cloudx5.com/justep/yarn-nm:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8088
+          name: web
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "100m"
+          limits:
+            memory: "2048Mi"
+            cpu: "4000m"
+        env:
+          - name: JOBHISTORY_ADDRESS
+            value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+          - name: JOBHISTORY_WEBAPP_ADDRESS
+            value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+          - name: HDFSNAMENODERPC_SERVICE_HOST
+            value: "10.96.0.5"     # 设置namenode的ip
+          - name: HDFSNAMENODERPC_SERVICE_PORT
+            value: "4231"           # 设置namenode的端口号
+          - name: MY_CPU_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: yarn-nm
+                resource: limits.cpu
+                divisor: 1
+          - name: MY_MEM_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: yarn-nm
+                resource: limits.memory
+                divisor: 1M
+

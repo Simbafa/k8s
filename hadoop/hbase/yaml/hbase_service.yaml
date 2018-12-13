@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-master-1
+  namespace: cloudai-2     # 设置命名空间
+spec:
+  selector:
+    app: hbase-master-pod-1    # 绑定pod
+  type: NodePort              # ClusterIP只允许集群内访问
+  clusterIP: "10.96.9.21"    # 指定集群ip，固定ip为了能在后面更好的绑定上
+  ports:
+    - name: rpc
+      port: 60000
+      targetPort: 60000        # 配置的hbase的链接端口
+      nodePort: 30034     
+    - name: info
+      port: 60001            # hbase运行状态的网页查询端口
+      targetPort: 60001
+      nodePort: 30035
+    - name: thrift
+      port: 9090           #　thrift服务器ip，让外界通过thrift来访问hbase
+      targetPort: 9090
+      nodePort: 30036
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-region-1
+  namespace: cloudai-2     # 设置命名空间
+spec:
+  selector:
+    app: hbase-region-pod-1    # 绑定pod
+  type: ClusterIP              # ClusterIP只允许集群内访问
+  clusterIP: "10.96.9.23"    # 指定集群ip，固定ip为了能在后面更好的绑定上
+  ports:
+    - name: rpc
+      port: 60000
+      targetPort: 60000        # 配置的hbase的链接端口   
+    - name: info
+      port: 60001            # hbase运行状态的网页查询端口
+      targetPort: 60001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-region-2
+  namespace: cloudai-2     # 设置命名空间
+spec:
+  selector:
+    app: hbase-region-pod-2    # 绑定pod
+  type: ClusterIP              # ClusterIP只允许集群内访问
+  clusterIP: "10.96.9.24"    # 指定集群ip，固定ip为了能在后面更好的绑定上
+  ports:
+    - name: rpc
+      port: 60000
+      targetPort: 60000        # 配置的hbase的链接端口   
+    - name: info
+      port: 60001            # hbase运行状态的网页查询端口
+      targetPort: 60001
+

@@ -1,0 +1,79 @@
+1. install server:
+apt-get install krb5-kdc krb5-admin-server
+2. 
+krb5_newrealm
+3. install client
+apt-get install krb5-user libpam-krb5 libpam-ccreds auth-client-config
+
+kadmin.local -q "addprinc -randkey host/kdc01.justep.com"
+kadmin.local -q "xst -k keytab.kdc01 host/kdc01.justep.com"
+
+kadmin.local -q "addprinc -randkey host/kdc02.justep.com"
+kadmin.local -q "xst -k keytab.kdc02 host/kdc02.justep.com"
+
+提取KDC的keytab文件
+kadmin.local -q "ktadd -k keytab.kdc01 host/kdc01.justep.com"
+
+kprop -r JUSTEP.COM -f /var/lib/krb5kdc/dump kdc02.justep.com
+
+
+hdfs:
+kadmin.local -q "addprinc -randkey root/namenode@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey root/datanode@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey root/journalnode@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey http/web@JUSTEP.COM"
+kadmin.local -q "listprincs"
+
+kadmin.local -q "xst -k hdfs.keytab  root/namenode@JUSTEP.COM"
+kadmin.local -q "xst -k hdfs.keytab  root/datanode@JUSTEP.COM"
+kadmin.local -q "xst -k hdfs.keytab  root/journalnode@JUSTEP.COM"
+kadmin.local -q "xst -k hdfs.keytab  http/web@JUSTEP.COM"
+klist -ket  hdfs.keytab
+
+zookeeper:
+kadmin.local -q "addprinc -randkey root/zookeeper@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey zookeeper/10.96.9.11@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey zookeeper/10.96.9.12@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey zookeeper/10.96.9.13@JUSTEP.COM"
+
+kadmin.local -q "xst -k zookeeper.keytab root/zookeeper@JUSTEP.COM"
+kadmin.local -q "xst -k zookeeper.keytab zookeeper/10.96.9.11@JUSTEP.COM"
+kadmin.local -q "xst -k zookeeper.keytab zookeeper/10.96.9.12@JUSTEP.COM"
+kadmin.local -q "xst -k zookeeper.keytab zookeeper/10.96.9.13@JUSTEP.COM"
+klist -ket  zookeeper.keytab
+
+hbase:
+kadmin.local -q "addprinc -randkey root/hbase-master-1@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey root/hbase-region-1@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey root/hbase-region-2@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey zkcli@JUSTEP.COM"
+
+kadmin.local -q "xst -k hbase.keytab root/hbase-master-1@JUSTEP.COM"
+kadmin.local -q "xst -k hbase.keytab root/hbase-region-1@JUSTEP.COM"
+kadmin.local -q "xst -k hbase.keytab root/hbase-region-2@JUSTEP.COM"
+kadmin.local -q "xst -k hbase.keytab zkcli@JUSTEP.COM"
+
+echo -e "rkt hdfs-un.keytab\nrkt HTTP.keytab\nwkt hdfs.keytab" | ktutil
+ktutil
+ktutil: rkt hdfs-unmerged.keytab
+ktutil: rkt HTTP.keytab
+ktutil: wkt hdfs.keytab
+ktutil: exit
+
+
+kinit -k -t /etc/hadoop/hdfs.keytab hdfs/hdfs-namenode-1-66f4b4b7c6-lvb79@JUSTEP.COM
+kinit -k -t /etc/hadoop/hdfs.keytab root/datanode@JUSTEP.COM
+kinit -k -t hdfs.keytab http/namenode@JUSTEP.COM
+
+kadmin.local -q "xst -k all.keytab root/namenode@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab root/datanode@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab root/journalnode@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab http/web@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab root/zookeeper@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab zookeeper/10.96.9.11@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab zookeeper/10.96.9.12@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab zookeeper/10.96.9.13@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab root/hbase-master-1@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab root/hbase-region-1@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab root/hbase-region-2@JUSTEP.COM"
+kadmin.local -q "xst -k all.keytab zkcli@JUSTEP.COM"

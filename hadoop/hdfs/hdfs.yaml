@@ -1,0 +1,224 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: cloudai-2
+  name: hub.cloudx5.com
+  annotations:
+    kubernetes.io/service-account.name: default
+data:
+  .dockercfg: eyJodWIuY2xvdWR4NS5jb20iOnsidXNlcm5hbWUiOiJhZG1pbiIsInBhc3N3b3JkIjoiMSIsImVtYWlsIjoidGlnZXI0MzVAcXEuY29tIiwiYXV0aCI6IllXUnRhVzQ2TVE9PSJ9fQ==
+type: kubernetes.io/dockercfg
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hdfs-namenode-service   # 设置服务名
+  namespace: cloudai-2          # 设置命名空间
+spec:
+  selector:
+    app: hdfs-namenode    # 根据label选择pod
+  type: ClusterIP         # 表示只有集群内可以访问，只能通过集群ip访问      
+  clusterIP: "10.96.0.5"  # 固定集群ip，datanode链接时要用这个集群ip
+  ports:
+    - name: rpc
+      port: 4231          # 集群ip访问的端口，设置namenode的端口号
+      targetPort: 8020    # hdfs系统的端口，接收Client连接的RPC端口，用于获取文件系统metadata信息。
+    - name: p1
+      port: 50020
+    - name: p2
+      port: 50090
+    - name: p3
+      port: 50070
+    - name: p4
+      port: 50010
+    - name: p5
+      port: 50075
+    - name: p6
+      port: 8031
+    - name: p7
+      port: 8032
+    - name: p8
+      port: 8033
+    - name: p9
+      port: 8040
+    - name: p10
+      port: 8042
+    - name: p11
+      port: 49707
+    - name: p12
+      port: 22
+    - name: p13
+      port: 8088
+    - name: p14
+      port: 8030
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: hdfs-namenode-1
+    namespace: cloudai-2
+spec:
+  selector:    
+    matchLabels:
+      app: hdfs-namenode   # 根据标签选择选择部署下一层的容器组，复制保持容器组的正常运行个数
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hdfs-namenode    #  设置pod的标签label
+    spec:
+      imagePullSecrets:       # 远程拉取镜像，需要拉取秘钥。要先在你的k8s上创建秘钥
+      - name: hub.cloudx5.com
+      nodeName: k8s-node1     # 根据node的名称选择主机。
+      containers:
+        - name: hdfs-namenode   # 设置容器名
+          image: hub.cloudx5.com/justep/hadoop-hdfs-namenode:1.0.0
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: data1
+              mountPath: /var/lib/hadoop-hdfs/cache/hdfs/dfs/name     # 添加挂载
+            - name: data2
+              mountPath: /data/nn   # 添加挂载
+          ports:
+            - containerPort: 50020
+            - containerPort: 50090
+            - containerPort: 50070
+            - containerPort: 50010
+            - containerPort: 50075
+            - containerPort: 8031
+            - containerPort: 8032
+            - containerPort: 8033
+            - containerPort: 8040
+            - containerPort: 8042
+            - containerPort: 49707
+            - containerPort: 22
+            - containerPort: 8088
+            - containerPort: 8030
+            - containerPort: 8020
+      volumes:
+        - hostPath: 
+            path: /hdfs/namenode/data1   # 存储namenode的信息，主要为datenode中数据库的位置信息。
+          name: data1
+        - hostPath:
+            path: /hdfs/namenode/data2
+          name: data2
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: hdfs-datanode-1
+    namespace: cloudai-2
+spec:
+  selector:    
+    matchLabels:
+      app: hdfs-datanode   # 根据标签选择选择部署下一层的容器组，复制保持容器组的正常运行个数
+      server-id: "1"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hdfs-datanode
+        server-id: "1"
+    spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com
+      nodeName: k8s-node2   # 根据node的名称选择主机。
+      containers:
+        - name: hdfs-datanode-1
+          image: hub.cloudx5.com/justep/hadoop-hdfs-datanode:1.0.0
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: data1
+              mountPath: /var/lib/hadoop-hdfs/cache/hdfs/dfs/name     # 添加挂载
+            - name: data2
+              mountPath: /data/dn   # 添加挂载
+          env:
+            - name: HDFSNAMENODERPC_SERVICE_HOST
+              value: "10.96.0.5"    # 设置namenode的ip
+            - name: HDFSNAMENODERPC_SERVICE_PORT
+              value: "4231"          # 设置namenode的端口号，hbase要链接这个端口号
+          ports:
+            - containerPort: 50020
+            - containerPort: 50090
+            - containerPort: 50070
+            - containerPort: 50010
+            - containerPort: 50075
+            - containerPort: 8031
+            - containerPort: 8032
+            - containerPort: 8033
+            - containerPort: 8040
+            - containerPort: 8042
+            - containerPort: 49707
+            - containerPort: 22
+            - containerPort: 8088
+            - containerPort: 8030
+            - containerPort: 8020
+      volumes:
+        - hostPath:
+            path: /hdfs/datanode1/data1   # 设置name数据存储路径在本地的路径
+          name: data1
+        - hostPath:
+            path: /hdfs/datanode1/data2  # 设置hdfs数据存储路径在本机的路径 
+          name: data2
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: hdfs-datanode-2
+    namespace: cloudai-2
+spec:
+  selector:    
+    matchLabels:
+      app: hdfs-datanode   # 根据标签选择选择部署下一层的容器组，复制保持容器组的正常运行个数
+      server-id: "2"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hdfs-datanode    # 设置pod的标签
+        server-id: "2"
+    spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com
+      nodeName: k8s-monitor   # 根据node的名称选择主机。
+      containers:
+        - name: hdfs-datanode-2
+          image: hub.cloudx5.com/justep/hadoop-hdfs-datanode:1.0.0
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: data1
+              mountPath: /var/lib/hadoop-hdfs/cache/hdfs/dfs/name    # 添加挂载
+            - name: data2
+              mountPath: /data/dn
+          env:
+            - name: HDFSNAMENODERPC_SERVICE_HOST
+              value: "10.96.0.5"     # 设置namenode的ip
+            - name: HDFSNAMENODERPC_SERVICE_PORT
+              value: "4231"           # 设置namenode的端口号
+          ports:
+            - containerPort: 50020
+            - containerPort: 50090
+            - containerPort: 50070
+            - containerPort: 50010
+            - containerPort: 50075
+            - containerPort: 8031
+            - containerPort: 8032
+            - containerPort: 8033
+            - containerPort: 8040
+            - containerPort: 8042
+            - containerPort: 49707
+            - containerPort: 22
+            - containerPort: 8088
+            - containerPort: 8030
+      volumes:
+        - name: data1
+          hostPath:
+            path: /hdfs/datanode2/data1    # 设置name数据存储路径在本地的路径
+        - name: data2
+          hostPath:
+            path: /hdfs/datanode2/data2   # 设置hdfs数据存储路径在本机的路径 
+

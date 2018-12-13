@@ -1,0 +1,15 @@
+  <configuration>
+      <property>
+          <name>fs.defaultFS</name>
+          <value>hdfs://10.96.0.5:4231</value>
+      </property>
+      <property>
+         <name>hadoop.security.authentication</name>
+         <value>kerberos</value>
+      </property>
+      <property>
+         <name>hadoop.security.authorization</name>
+         <value>true</value>
+      </property>
+  </configuration>
+

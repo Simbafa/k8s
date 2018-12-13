@@ -1,0 +1,4 @@
+docker build -t hub.cloudx5.com/justep/hadoop-hbase:1.0.0 .
+docker run -it --name=temp hub.cloudx5.com/justep/hadoop-hbase:1.0.0 /bin/bash
+apt-get update -y && apt-get install -y krb5-user libpam-krb5 libpam-ccreds
+docker commit -m "compile nginx on centos" temp hub.cloudx5.com/justep/hadoop-hbase:1.0.1

@@ -1,0 +1,60 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeppelin
+  namespace: yarn-cluster
+  labels:
+    component: zeppelin
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    name: web
+  # *.zeppelin.yarn-cluster.svc.cluster.local
+  selector:
+    component: zeppelin
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: zeppelin
+spec:
+  serviceName: "zeppelin"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: zeppelin
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: zeppelin
+        image: dylanmei/zeppelin:0.7.0
+        env:
+        - name: ZEPPELIN_PORT
+          value: "8080"
+        - name: MASTER
+          value: "yarn"
+        - name: ZEPPELIN_JAVA_OPTS
+          value: >-
+            -Dspark.driver.memory=1g
+            -Dspark.executor.memory=1g
+        - name: SPARK_SUBMIT_OPTIONS
+          value: >-
+            --deploy-mode client
+            --num-executors 2
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "1000m"
+          limits:
+            memory: "4096Mi"
+            cpu: "2000m"
+        volumeMounts:
+          - name: hadoop-config
+            mountPath: /usr/hadoop-2.7.2/etc/hadoop
+      volumes:
+        - name: hadoop-config
+          configMap:
+            name: hadoop-config

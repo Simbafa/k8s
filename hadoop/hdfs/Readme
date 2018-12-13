@@ -1,0 +1,19 @@
+kubectl create ns cloudai-2
+
+在集群的主机上找一个有足够空间的目录。
+
+首先要知道服务可以设定的集群ip有效范围。
+
+修改clusterIP为有效的集群ip
+
+知道节点的node的label
+
+kubectl get nodes查看所有节点的name名称
+
+若要在服务器上删除k8s设置的挂载，存储目录
+sudo umount /data2     # 卸载挂载
+sudo rm -rf /data2     # 删除目录
+
+部署后查看端口占用
+
+netstat -ntlp
