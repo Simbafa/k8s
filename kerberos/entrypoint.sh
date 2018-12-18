@@ -43,8 +43,8 @@ create_config() {
 
 [realms]
  $REALM = {
-  kdc = $KDC_ADDRESS
-  admin_server = $KDC_ADDRESS
+  kdc = 0.0.0.0
+  admin_server = 0.0.0.0
   default_domain = $DOMAIN_REALM
   database_module = openldap_ldapconf
  }
@@ -129,10 +129,7 @@ main() {
     start_kdc
 
     touch /kerberos_initialized
-  fi
 
-  #if [ ! -f /etc/krb5kdc/principal ]; then
-  if [ ! -f /var/kerberos/krb5kdc/principal ]; then
     while true; do sleep 1000; done
   else
     start_kdc

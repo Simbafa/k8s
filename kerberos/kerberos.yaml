@@ -1,0 +1,76 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kerberos-1
+  namespace: cloudai-2     # 设置命名空间
+  labels:
+      name: kerberos-1
+spec:
+  ports:
+    - name: kdc
+      port: 88
+      targetPort: 88
+    - name: kadmin
+      port: 749
+      targetPort: 749
+  selector:
+    name: kerberos
+    server-id: "1"
+  type: ClusterIP         # 只能集群内部访问
+  clusterIP: 10.96.100.2    # 指定服务的集群ip，必须保障可用并且没有被占用
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kerberos-1
+  namespace: cloudai-2     # 设置命名空间
+spec:
+  selector:    
+    matchLabels:
+      name: kerberos   # 根据标签选择选择部署下一层的容器组，复制保持容器组的正常运行个数
+      server-id: "1"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: kerberos
+        server-id: "1"
+    spec:
+      volumes:
+        - hostPath:
+            path: /store/kerberos/etc/krb5.conf
+          name: krb5conf
+        - hostPath:
+            path: /store/kerberos/krb5kdc
+          name: krb5kdc
+        - hostPath:
+            path: /store/kerberos/log
+          name: log
+        - hostPath:
+            path: /dev/urandom
+          name: urandom
+      imagePullSecrets:
+      - name: hub.cloudx5.com
+      nodeName: k8s-node1
+      containers:
+        - name: server
+          image: hub.cloudx5.com/justep/kerberos-ldap:1.0.0
+          imagePullPolicy: Always
+          env:
+            - name: LDAP_URL
+              value: "ldap://10.96.100.1:389"
+          ports:
+            - containerPort: 88
+            - containerPort: 749
+          volumeMounts:
+            - mountPath: /dev/urandom
+              name: urandom
+            - mountPath: /etc/krb5.conf
+              name: krb5conf
+            - mountPath: /var/kerberos/krb5kdc
+              name: krb5kdc
+            - mountPath: /var/log/kerberos
+              name: log
+

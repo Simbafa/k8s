@@ -40,7 +40,7 @@ EOF
 fi
 
 # Fix permissions on Database
-chown -R openldap:openldap /var/lib/ldap
+#chown -R openldap:openldap /var/lib/ldap
 
 # Allow bypass entrypoint
 if [ "$1" == "slapd" ]; then
@@ -54,11 +54,12 @@ if [ "$1" == "slapd" ]; then
 
 fi
 
-nohup slapd -h 'ldap:/// ldapi:///' -g openldap -u openldap -F /etc/ldap/slapd.d -d stats >/dev/null 2>error.log &
+#nohup slapd -h 'ldap:/// ldapi:///' -g openldap -u openldap -F /etc/ldap/slapd.d -d stats >/dev/null 2>/var/lib/ldap/error.log &
+nohup slapd -h 'ldap:/// ldapi:///' -F /etc/ldap/slapd.d -d stats >/dev/null 2>/var/lib/ldap/error.log &
 
 STARTED=0
 while [ $STARTED -eq 0 ]; do
-    RET=`cat error.log | grep "slapd starting" | wc -l`
+    RET=`cat /var/lib/ldap/error.log | grep "slapd starting" | wc -l`
     if [ $RET -eq 0 ]; then 
         sleep 1s
     else
@@ -66,7 +67,7 @@ while [ $STARTED -eq 0 ]; do
     fi
 done
 
-FILE=/kerberos.ldif
+FILE=/etc/ldap/kerberos.ldif
 if [ ! -f $FILE ]; then
     Result=`slapcat -f /schema_convert.conf -F /tmp -n0 | grep kerberos,cn=schema`
     DN="`echo $Result | sed 's/dn: //g'`"
@@ -79,5 +80,5 @@ if [ ! -f $FILE ]; then
     ldapadd -Q -Y EXTERNAL -H ldapi:/// -f $FILE
 fi
 
-tail -f error.log
+tail -f /var/lib/ldap/error.log
 

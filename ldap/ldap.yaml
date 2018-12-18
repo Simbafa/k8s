@@ -1,0 +1,62 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ldap-1
+  namespace: cloudai-2     # 设置命名空间
+  labels:
+      name: ldap-1
+spec:
+  ports:
+    - name: ldap
+      port: 389
+      targetPort: 389
+  selector:
+    name: ldap
+    server-id: "1"
+  type: ClusterIP         # 只能集群内部访问
+  clusterIP: 10.96.100.1    # 指定服务的集群ip，必须保障可用并且没有被占用
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ldap-1
+  namespace: cloudai-2     # 设置命名空间
+spec:
+  selector:    
+    matchLabels:
+      name: ldap   # 根据标签选择选择部署下一层的容器组，复制保持容器组的正常运行个数
+      server-id: "1"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ldap
+        server-id: "1"
+    spec:
+      volumes:
+        - hostPath:
+            path: /store/ldap/etc/ldap.conf
+          name: ldapconf
+        - hostPath:
+            path: /store/ldap/lib
+          name: lib
+      imagePullSecrets:
+      - name: hub.cloudx5.com
+      nodeName: k8s-node1
+      containers:
+        - name: server
+          image: hub.cloudx5.com/justep/ldap:1.0.0
+          imagePullPolicy: Always
+          env:
+            - name: LDAP_PASSWORD
+              value: "admin"
+          ports:
+            - containerPort: 389
+          volumeMounts:
+            - mountPath: /etc/ldap/ldap.conf
+              name: ldapconf
+            - mountPath: /var/lib/ldap
+              name: lib
+
