@@ -8,5 +8,6 @@ RUN yum install -y krb5-server krb5-libs krb5-auth-dialog krb5-workstation krb5-
 EXPOSE 88 749
 
 ADD ./entrypoint.sh /entrypoint.sh
+ADD ./kdc.conf /kdc.conf
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -11,6 +11,7 @@ spec:
     - name: kdc
       port: 88
       targetPort: 88
+      protocol: UDP
     - name: kadmin
       port: 749
       targetPort: 749

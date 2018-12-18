@@ -121,14 +121,15 @@ main() {
   fix_nameserver
   fix_hostname
 
-  if [ ! -f /kerberos_initialized ]; then
+  if [ ! -f /var/kerberos/krb5kdc/kerberos_initialized ]; then
     create_config
+    cp /kdc.conf /var/kerberos/krb5kdc/
     init_ldap
     create_admin_user
     create_db
     start_kdc
 
-    touch /kerberos_initialized
+    touch /var/kerberos/krb5kdc/kerberos_initialized
 
     while true; do sleep 1000; done
   else
