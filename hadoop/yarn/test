@@ -1,0 +1,11 @@
+val mapRdd=sc.textFile("/test/README.txt").flatMap(_.split(" ")).map(word=>(word,1)).reduceByKey(_+_).map(entry=>(entry._2,entry._1))
+val sortRdd=mapRdd.sortByKey(false,1)
+val mapRdd2=sortRdd.map(entry=>(entry._2,entry._1))
+ mapRdd2.saveAsTextFile("/test/output")
+
+// 需要在所有的HDFS机器上创建zkcli用户
+useradd zkcli
+hadoop fs -mkdir /user/zkcli
+hadoop fs -chown zkcli:hadoop /user/zkcli
+cd /usr/local/spark/
+./bin/spark-submit  --principal zkcli@JUSTEP.COM --keytab /etc/hadoop/hdfs.keytab --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode client  ./examples/jars/spark-examples_2.11-2.4.0.jar 10

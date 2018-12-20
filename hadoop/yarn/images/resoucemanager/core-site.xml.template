@@ -15,5 +15,42 @@
          <name>hadoop.security.authorization</name>
          <value>true</value>
       </property>
+
+      <property>
+        <name>hadoop.security.group.mapping</name>
+        <value>org.apache.hadoop.security.LdapGroupsMapping</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.url</name>
+        <value>ldap://10.96.100.1:389</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.bind.user</name>
+        <value>cn=admin,dc=justep,dc=com</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.bind.password</name>
+        <value>admin</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.base</name>
+        <value>dc=justep,dc=com</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.search.filter.user</name>
+        <value>(&amp;(objectClass=posixAccount)(uid={0}))</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.search.filter.group</name>
+        <value>(objectClass=posixGroup)</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.search.attr.member</name>
+        <value>gidNumber</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.search.attr.group.name</name>
+        <value>cn</value>
+      </property>
   </configuration>
 

@@ -9,7 +9,10 @@ ENV HBASE_INSTALL_DIR /hbase
 # 配置环境变量
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 # 安装supervisor为了能以前台的方式运行hbase。(supervisor在前台，hbase在后台)
-RUN apt-get update -y && apt-get install --no-install-recommends -y supervisor vim
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -y supervisor vim libpam-ldap libnss-ldap nscd krb5-user libpam-krb5 libpam-ccreds ldap-utils
+
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # 下载解压hbase到指定目录
@@ -21,6 +24,9 @@ RUN mkdir -p ${HBASE_INSTALL_DIR} && \
 ADD hbase-site.xml /hbase/conf/hbase-site.xml
 ADD hbase-env.sh /hbase/conf/hbase-env.sh
 
+COPY common-account common-auth common-password common-session common-session-noninteractive /etc/pam.d/
+COPY ldap.conf nsswitch.conf krb5.conf /etc/
+COPY ldap.conf2 /etc/ldap/ldap.conf
 ADD hbase.keytab /hbase/conf/hbase.keytab
 ADD zk-jaas.conf /hbase/conf/zk-jaas.conf
 ADD core-site.xml /hbase/conf/core-site.xml

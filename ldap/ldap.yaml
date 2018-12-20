@@ -37,11 +37,8 @@ spec:
     spec:
       volumes:
         - hostPath:
-            path: /store/ldap/etc/ldap.conf
-          name: ldapconf
-        - hostPath:
-            path: /store/ldap/lib
-          name: lib
+            path: /store/ldap
+          name: ldap
       imagePullSecrets:
       - name: hub.cloudx5.com
       nodeName: k8s-node1
@@ -55,8 +52,6 @@ spec:
           ports:
             - containerPort: 389
           volumeMounts:
-            - mountPath: /etc/ldap/ldap.conf
-              name: ldapconf
             - mountPath: /var/lib/ldap
-              name: lib
+              name: ldap
 

@@ -111,5 +111,6 @@
     <name>dfs.web.authentication.kerberos.keytab</name>
     <value>/etc/hadoop/hdfs.keytab</value>
   </property>
+
 </configuration>
 

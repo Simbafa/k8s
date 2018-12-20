@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
-[ "$DEBUG" == 'true' ] && set -x
-
 # Defaults
 : ${LDAP_ORG:='Justep Com'}
 : ${LDAP_DOMAIN:='justep.com'}
@@ -14,8 +10,9 @@ set -e
 : ${LDAP_USER:='admin'}
 LDAP_DC="dc=$(echo $LDAP_DOMAIN | sed -e 's@\.@,dc=@g')"  # Convert to ldap DC
 
+FROMHOST=/var/lib/ldap
 # Skip configuration if config exists
-if [ ! -d "/etc/ldap/slapd.d" ]; then
+if [ ! -f $FROMHOST/ldap_initialized ]; then
 
 cat <<-EOF | debconf-set-selections
     slapd shared/organization     string $LDAP_ORG
@@ -37,29 +34,21 @@ EOF
 
   egrep -q '^BASE' /etc/ldap/ldap.conf || echo -e "BASE \t $LDAP_DC" >> /etc/ldap/ldap.conf
 
-fi
-
-# Fix permissions on Database
-#chown -R openldap:openldap /var/lib/ldap
-
-# Allow bypass entrypoint
-if [ "$1" == "slapd" ]; then
-
-    # Set slapd log level
-    if [ "$DEBUG" == 'true' ]; then
-        set -- "$@" -d Any
-    else
-        set -- "$@" -d stats
-    fi
+  touch $FROMHOST/ldap_initialized
+  cp /etc/ldap/slapd.d $FROMHOST/ -fr
+  cp /etc/ldap/ldap.conf $FROMHOST/ldap.conf
 
 fi
 
-#nohup slapd -h 'ldap:/// ldapi:///' -g openldap -u openldap -F /etc/ldap/slapd.d -d stats >/dev/null 2>/var/lib/ldap/error.log &
-nohup slapd -h 'ldap:/// ldapi:///' -F /etc/ldap/slapd.d -d stats >/dev/null 2>/var/lib/ldap/error.log &
+cp /slapd.conf /etc/sasl2/
+cp /slapd.conf /etc/ldap/sasl2/
+cp $FROMHOST/ldap.conf /etc/ldap/ldap.conf
+
+nohup slapd -h 'ldap:/// ldapi:///' -F $FROMHOST/slapd.d -d stats >/dev/null 2>$FROMHOST/error.log &
 
 STARTED=0
 while [ $STARTED -eq 0 ]; do
-    RET=`cat /var/lib/ldap/error.log | grep "slapd starting" | wc -l`
+    RET=`cat $FROMHOST/error.log | grep "slapd starting" | wc -l`
     if [ $RET -eq 0 ]; then 
         sleep 1s
     else
@@ -67,7 +56,7 @@ while [ $STARTED -eq 0 ]; do
     fi
 done
 
-FILE=/etc/ldap/kerberos.ldif
+FILE=$FROMHOST/kerberos.ldif
 if [ ! -f $FILE ]; then
     Result=`slapcat -f /schema_convert.conf -F /tmp -n0 | grep kerberos,cn=schema`
     DN="`echo $Result | sed 's/dn: //g'`"
@@ -80,5 +69,5 @@ if [ ! -f $FILE ]; then
     ldapadd -Q -Y EXTERNAL -H ldapi:/// -f $FILE
 fi
 
-tail -f /var/lib/ldap/error.log
+tail -f $FROMHOST/error.log
 

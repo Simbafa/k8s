@@ -14,5 +14,6 @@ EXPOSE 389
 
 COPY entrypoint.sh schema_convert.conf /
 COPY kerberos.schema /etc/ldap/schema/
+COPY slapd.conf /
 
 ENTRYPOINT ["/entrypoint.sh"]
