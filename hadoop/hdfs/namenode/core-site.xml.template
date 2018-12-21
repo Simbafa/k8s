@@ -45,9 +45,17 @@
        <value>(objectClass=posixGroup)</value>
      </property>
      <property>
-       <name>hadoop.security.group.mapping.ldap.search.attr.member</name>
+       <name>hadoop.security.group.mapping.ldap.search.attr.memberOf</name>
        <value>gidNumber</value>
      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.search.attr.member</name>
+        <value>memberUid</value>
+      </property>
+      <property>
+        <name>hadoop.security.group.mapping.ldap.posix.attr.uid.name</name>
+        <value>uid</value>
+      </property>
      <property>
        <name>hadoop.security.group.mapping.ldap.search.attr.group.name</name>
        <value>cn</value>

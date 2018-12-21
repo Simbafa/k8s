@@ -19,9 +19,9 @@ ENV PATH $PATH:$JAVA_HOME/bin:$JRE_HOME
 ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
 # install hadoop，在https://archive.apache.org/dist/hadoop//下载
-ADD hadoop-2.7.3.tar.gz /
-RUN cp -rf /hadoop-2.7.3/* /
-RUN rm -rf /hadoop-2.7.3
+ADD hadoop-2.9.2.tar.gz /
+RUN cp -rf /hadoop-2.9.2/* /
+RUN rm -rf /hadoop-2.9.2
 RUN ldconfig
 ADD commons-daemon-1.1.0.jar /share/hadoop/hdfs/lib/commons-daemon-1.1.0.jar
 ADD hdfs.keytab /etc/hadoop/hdfs.keytab
