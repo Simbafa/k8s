@@ -1,17 +1,13 @@
 
 # docker build -t hub.cloudx5.com/justep/hadoop-hbase:1.0.0 . 
 
-FROM java:8
+FROM hub.cloudx5.com/justep/hadoop-base:1.0.0
 
 # 这里要去https://mirrors.tuna.tsinghua.edu.cn/apache/hbase看看有什么版本的
-ENV HBASE_VERSION 2.1.1
+ENV HBASE_VERSION 1.4.9
 ENV HBASE_INSTALL_DIR /hbase
 # 配置环境变量
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-# 安装supervisor为了能以前台的方式运行hbase。(supervisor在前台，hbase在后台)
-RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && \
-    apt-get install -y supervisor vim libpam-ldap libnss-ldap nscd krb5-user libpam-krb5 libpam-ccreds ldap-utils
+ENV JAVA_HOME=/usr/local/jdk1.8.0_191
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -24,9 +20,6 @@ RUN mkdir -p ${HBASE_INSTALL_DIR} && \
 ADD hbase-site.xml /hbase/conf/hbase-site.xml
 ADD hbase-env.sh /hbase/conf/hbase-env.sh
 
-COPY common-account common-auth common-password common-session common-session-noninteractive /etc/pam.d/
-COPY ldap.conf nsswitch.conf krb5.conf /etc/
-COPY ldap.conf2 /etc/ldap/ldap.conf
 ADD hbase.keytab /hbase/conf/hbase.keytab
 ADD zk-jaas.conf /hbase/conf/zk-jaas.conf
 ADD core-site.xml /hbase/conf/core-site.xml
@@ -36,6 +29,7 @@ ADD US_export_policy.jar /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/security/
 
 ADD start-k8s-hbase.sh /hbase/bin/start-k8s-hbase.sh
 RUN chmod +x /hbase/bin/start-k8s-hbase.sh
+#RUN cp /hbase/lib/client-facing-thirdparty/htrace-core* /hbase/lib/
 
 WORKDIR /hbase/bin
 

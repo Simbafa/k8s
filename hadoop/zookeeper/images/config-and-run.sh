@@ -9,6 +9,9 @@ sed -i "s!SERVER_PRINCIPAL!$SERVER_PRINCIPAL!g" /opt/zookeeper/conf/jaas.conf
 kinit -kt /opt/zookeeper/conf/zookeeper.keytab root/namenode@JUSTEP.COM
 klist 
 
+echo "Start installing ldap......"
+/install_ldap.sh
+
 export JVMFLAGS="-Djava.security.auth.login.config=/opt/zookeeper/conf/jaas.conf"
 
 echo "$SERVER_ID / $MAX_SERVERS" 

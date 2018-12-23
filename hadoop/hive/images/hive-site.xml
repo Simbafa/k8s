@@ -1,0 +1,53 @@
+<configuration>
+  <property>
+    <name>hive.server2.enable.doAs</name>
+    <value>false</value>
+    <description>Needed to connect from ruby to hive server</description>
+  </property>
+  <property>
+     <name>hive.exec.scratchdir</name>
+     <value>/tmp</value>
+  </property>
+  <property>
+    <name>mapred.child.java.opts</name>
+    <value>-Xmx4G -XX:+UseConcMarkSweepGC</value>
+  </property>
+
+  <property>
+    <name>hive.server2.authentication</name>
+    <value>kerberos</value>
+  </property>
+  <property>
+    <name>hive.metastore.sasl.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.metastore.kerberos.principal</name>
+    <value>hive@JUSTEP.COM</value>
+  </property>
+  <property>
+    <name>hive.metastore.kerberos.keytab.file</name>
+    <value>/usr/local/hive/conf/hive.keytab</value>
+  </property>
+  <property>
+    <name>hive.server2.authentication.kerberos.principal</name>
+    <value>hive@JUSTEP.COM</value>
+  </property>
+  <property>
+    <name>hive.server2.authentication.kerberos.keytab</name>
+    <value>/usr/local/hive/conf/hive.keytab</value>
+  </property>
+
+  <property> 
+    <name>hive.server2.authentication</name> 
+    <value>LDAP</value> 
+  </property> 
+  <property> 
+    <name>hive.server2.authentication.ldap.url</name> 
+    <value>ldap://LDAP_HOST</value> 
+  </property> 
+  <property> 
+    <name>hive.server2.authentication.ldap.baseDN</name> 
+    <value>ou=hive,dc=justep,dc=com</value> 
+  </property> 
+</configuration>

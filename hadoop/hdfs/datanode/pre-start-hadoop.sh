@@ -18,3 +18,6 @@ fi
 
 kinit -kt /etc/hadoop/hdfs.keytab root/datanode@JUSTEP.COM
 
+echo "Start installing ldap......"
+/install_ldap.sh
+

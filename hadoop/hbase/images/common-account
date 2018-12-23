@@ -25,4 +25,3 @@ account	required			pam_permit.so
 # and here are more per-package modules (the "Additional" block)
 account	required			pam_krb5.so minimum_uid=1000
 # end of pam-auth-update config
- session required pam_mkhomedir.so skel=/etc/skel/ umask=0022

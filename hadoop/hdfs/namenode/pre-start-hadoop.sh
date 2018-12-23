@@ -12,11 +12,11 @@ mkdir -p /data/hadoop-log-dir
 
 kinit -kt /etc/hadoop/hdfs.keytab root/namenode@JUSTEP.COM
 
+echo "Start installing ldap......"
+/install_ldap.sh
+
 # start all JournalNode,  NameNode and JournalNode  in same pod
 /sbin/hadoop-daemon.sh start journalnode
-
-# create namespaces zkfc once, need in hadoop-HA 
-# /bin/hdfs zkfc -formatZK
 
 CLUSTER_ID=CID-920897d7-51bf-43c7-9766-443e9aefe878
 if [ ! -d /data/nn/current ]; then

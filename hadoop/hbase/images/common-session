@@ -30,4 +30,3 @@ session	optional			pam_krb5.so minimum_uid=1000
 session	required	pam_unix.so 
 session	optional			pam_ldap.so 
 # end of pam-auth-update config
-session required pam_mkhomedir.so skel=/etc/skel/

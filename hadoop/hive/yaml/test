@@ -1,0 +1,5 @@
+create database hive;
+show databases;
+use hive;
+create table hive_01 (id int,name string);
+

@@ -29,6 +29,9 @@ do
    echo "${arr[0]} ${arr[1]}" >> /etc/hosts
 done
 
+echo "Start installing ldap......"
+/install_ldap.sh
+
 ##启动master和region在同一个node上，尽在master节点上启动即可，会自动寻找
 #if [ "$MASTER_DEBUG" == "no" ]; then
 #    /hbase/bin/start-hbase.sh    # 会自动后台启动master和regionserver

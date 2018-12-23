@@ -20,6 +20,9 @@ sed -i "s/MY_MEM_LIMIT/$MY_MEM_LIMIT/;s/MY_CPU_LIMIT/$MY_CPU_LIMIT/" /etc/hadoop
 mkdir -p /data/hadoop-log-dir
 mkdir -p /data/yarn-log-dir
 
+echo "Start installing ldap......"
+/install_ldap.sh
+
 . /libexec/yarn-config.sh
 /sbin/yarn-daemon.sh --config $YARN_CONF_DIR  start nodemanager
 

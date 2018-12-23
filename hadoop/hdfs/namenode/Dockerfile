@@ -4,7 +4,6 @@
 FROM hub.cloudx5.com/justep/hadoop-base:1.0.0
 RUN mkdir -p /config
 RUN mkdir -p /data
-RUN apt-get update && apt install -y --no-install-recommends net-tools iputils-ping iproute2
 
 # config hadoop
 ADD hadoop-env.sh /etc/hadoop/hadoop-env.sh

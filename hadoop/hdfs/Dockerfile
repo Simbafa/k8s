@@ -7,7 +7,7 @@ USER root
 # tools
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
-    apt-get install -y -q curl sudo supervisor krb5-user libpam-krb5 libpam-ccreds jsvc vim libcap2 libpam-ldap libnss-ldap ldap-utils nscd
+    apt-get install -y -q wget curl sudo supervisor krb5-user libpam-krb5 libpam-ccreds jsvc vim libcap2 net-tools iputils-ping iproute2
 
 # 先去下载http://www.oracle.com/technetwork/java/javase/downloads/index.html
 ADD jdk-8u191-linux-x64.tar.gz /usr/local/
@@ -27,10 +27,12 @@ ADD commons-daemon-1.1.0.jar /share/hadoop/hdfs/lib/commons-daemon-1.1.0.jar
 ADD hdfs.keytab /etc/hadoop/hdfs.keytab
 ADD krb5.conf /etc/krb5.conf
 
-COPY common-account common-auth common-password common-session common-session-noninteractive /etc/pam.d/
-COPY ldap.conf nsswitch.conf /etc/
-COPY ldap.conf2 /etc/ldap/ldap.conf
+#COPY common-account common-auth common-password common-session common-session-noninteractive /etc/pam.d/
+#COPY ldap.conf nsswitch.conf /etc/
+#COPY ldap.conf2 /etc/ldap/ldap.conf
 
+ADD install_ldap.sh /install_ldap.sh
+RUN chmod +x /install_ldap.sh
 ENV HADOOP_CONF_DIR /etc/hadoop
 ENV PATH $PATH:/bin
 

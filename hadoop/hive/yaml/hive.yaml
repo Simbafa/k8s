@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive
+  namespace: cloudai-2
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: hive
+  template:
+    metadata:
+      labels:
+        app: hive
+    spec:
+      imagePullSecrets:       # 远程拉取镜像，需要拉取秘钥。要先在你的k8s上创建秘钥
+      - name: hub.cloudx5.com
+      nodeName: k8s-node2     # 根据node的名称选择主机。
+      containers:
+        - name: hive
+          image: hub.cloudx5.com/justep/hive:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 10000
+            - containerPort: 10002
+            - containerPort: 9083
+          resources:
+            requests:
+              memory: "1024Mi"
+              cpu: "100m"
+            limits:
+              memory: "2048Mi"
+              cpu: "4000m"
+          env:
+            - name: LDAP_HOST
+              value: 10.96.100.1:389
+            - name: JOBHISTORY_ADDRESS
+              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+            - name: JOBHISTORY_WEBAPP_ADDRESS
+              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+            - name: HDFSNAMENODERPC_SERVICE_HOST
+              value: "10.96.0.5"     # 设置namenode的ip
+            - name: HDFSNAMENODERPC_SERVICE_PORT
+              value: "4231"           # 设置namenode的端口号
+            - name: MY_CPU_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: hive
+                  resource: limits.cpu
+                  divisor: 1
+            - name: MY_MEM_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: hive
+                  resource: limits.memory
+                  divisor: 1M
+          volumeMounts:
+            - name: fromhost
+              mountPath: /etc/hadoop/fromhost
+      volumes:
+        - hostPath:
+            path: /hive/fromhost
+          name: fromhost
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: hive
+  name: hive-service
+  namespace: cloudai-2
+spec:
+  ports:
+    - port: 10000
+      targetPort: 10000
+      name: thrift
+    - port: 10002
+      targetPort: 10002
+      name: webui
+    - port: 9083
+      targetPort: 9083
+      name: metastore
+  selector:
+    app: hive
+  type: NodePort
+

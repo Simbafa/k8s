@@ -18,6 +18,9 @@ sed -i "s/JOBHISTORY_ADDRESS/$JOBHISTORY_ADDRESS/;s/JOBHISTORY_WEBAPP_ADDRESS/$J
 mkdir -p /data/hadoop-log-dir
 mkdir -p /data/yarn-log-dir
 
+echo "Start installing ldap......"
+/install_ldap.sh
+
 . /libexec/yarn-config.sh
 /sbin/yarn-daemon.sh --config $YARN_CONF_DIR  start resourcemanager
 /sbin/yarn-daemon.sh --config $YARN_CONF_DIR  start proxyserver

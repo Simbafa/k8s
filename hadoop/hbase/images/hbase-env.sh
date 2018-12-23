@@ -1,4 +1,4 @@
-export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+export JAVA_HOME=/usr/local/jdk1.8.0_191
 export HBASE_CLASSPATH=/hbase/conf
 export HBASE_MANAGES_ZK=false
 export HBASE_HOME=/hbase

@@ -23,4 +23,7 @@ cd $CURRENT_DIR/hbase/images
 cd $CURRENT_DIR/zookeeper/images
 ./build.sh true
 
+cd $CURRENT_DIR/hive/images
+./build.sh true
+
 docker rmi $(docker images | grep "<none>" | awk '{print $3}')
