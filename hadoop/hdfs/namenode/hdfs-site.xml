@@ -43,7 +43,7 @@
     <value>false</value>
   </property>
 
-  <property>
+  <!--property>
     <name>dfs.block.access.token.enable</name>
     <value>true</value>
   </property>
@@ -110,7 +110,7 @@
   <property>
     <name>dfs.web.authentication.kerberos.keytab</name>
     <value>/etc/hadoop/hdfs.keytab</value>
-  </property>
+  </property-->
 
 </configuration>
 

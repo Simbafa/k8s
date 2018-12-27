@@ -6,6 +6,7 @@ export SCALA_HOME="/usr/local/scala"
 export HADOOP_HOME=""
 export HADOOP_CONF_DIR="/etc/hadoop"
 export YARN_CONF_DIR="/etc/hadoop"
+export SPARK_DIST_CLASSPATH=$(hadoop classpath)
 #export SPARK_MASTER_IP=20.2.217.123
 SPARK_LOCAL_DIRS="/data/spark"
 SPARK_DRIVER_MEMORY=1G
