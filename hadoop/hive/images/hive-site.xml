@@ -1,5 +1,9 @@
 <configuration>
   <property>
+    <name>fs.permissions.umask-mode</name>
+    <value>022</value>
+  </property>
+  <property>
     <name>hive.server2.enable.doAs</name>
     <value>false</value>
     <description>Needed to connect from ruby to hive server</description>
@@ -13,17 +17,17 @@
     <value>-Xmx4G -XX:+UseConcMarkSweepGC</value>
   </property>
 
-  <property>
+  <!--property>
     <name>hive.server2.authentication</name>
     <value>kerberos</value>
-  </property>
+  </property-->
   <property>
     <name>hive.metastore.sasl.enabled</name>
     <value>true</value>
   </property>
   <property>
     <name>hive.metastore.kerberos.principal</name>
-    <value>hive@JUSTEP.COM</value>
+    <value>hive/hive@JUSTEP.COM</value>
   </property>
   <property>
     <name>hive.metastore.kerberos.keytab.file</name>
@@ -31,7 +35,7 @@
   </property>
   <property>
     <name>hive.server2.authentication.kerberos.principal</name>
-    <value>hive@JUSTEP.COM</value>
+    <value>hive/hive@JUSTEP.COM</value>
   </property>
   <property>
     <name>hive.server2.authentication.kerberos.keytab</name>
@@ -50,4 +54,64 @@
     <name>hive.server2.authentication.ldap.baseDN</name> 
     <value>ou=hive,dc=justep,dc=com</value> 
   </property> 
+
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hive</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://hive-metadata-mysql-service:3306/hive?createDatabaseIfNotExist=true&amp;useSSL=false</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+  </property>
+
+  <!--property>
+    <name>hive.security.authorization.enabled</name>
+    <value>true</value>
+    <description>enableor disable the hive clientauthorization</description>
+  </property>
+  <property>
+    <name>hive.security.authorization.createtable.owner.grants</name>
+    <value>ALL</value>
+    <description>theprivileges automatically granted to the ownerwhenever a table gets created. Anexample like "select,drop" willgrant select and drop privilege to theowner of the table</description>
+  </property>
+  <property>
+    <name>hive.semantic.analyzer.hook</name>
+    <value>com.hive.HiveAdmin</value>
+  </property-->
+  <property>
+    <name>hive.execution.engine</name>
+    <value>spark</value>
+  </property>
+  <property>
+    <name>hive.enable.spark.execution.engine</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>spark.serializer</name>
+    <value>org.apache.spark.serializer.KryoSerializer</value>
+  </property>
+  <property> 
+    <name>hive.spark.job.monitor.timeout</name>
+    <value>180s</value>
+  </property>
+  <property>
+    <name>spark.home</name>
+    <value>/usr/local/spark</value>
+  </property> 
+  <property>
+    <name>spark.master</name>
+    <value>yarn-client</value>
+  </property>
+  <property>
+    <name>spark.submit.deployMode</name> 
+    <value>client</value> 
+  </property>
 </configuration>
