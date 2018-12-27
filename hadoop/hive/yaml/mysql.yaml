@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hive-metadata-mysql
+  name: hive-metadata-mysql
+  namespace: cloudai-2
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: hive-metadata-mysql
+  template:
+    metadata:
+      labels:
+        app: hive-metadata-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: hive
+            - name: MYSQL_DATABASE
+              value: hive
+            - name: MYSQL_USER
+              value: hive
+            - name: MYSQL_PASSWORD
+              value: hive
+      volumes:
+        - name: data
+          hostPath:
+            path: /hive/mysql
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: hive-metadata-mysql
+  name: hive-metadata-mysql-service
+  namespace: cloudai-2
+spec:
+  ports:
+    - name: tcp
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: hive-metadata-mysql
