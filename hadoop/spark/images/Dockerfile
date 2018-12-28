@@ -9,11 +9,11 @@ FROM openjdk:8-alpine
 # If this docker file is being used in the context of building your images from a Spark
 # distribution, the docker build command should be invoked from the top level directory
 # of the Spark distribution. E.g.:
-# docker build -t spark:latest -f kubernetes/dockerfiles/spark/Dockerfile .
+# docker build -t hub.cloudx5.com/justep/spark:1.0.0 -f kubernetes/dockerfiles/spark/Dockerfile .
 
 RUN set -ex && \
     apk upgrade --no-cache && \
-    apk add --no-cache bash tini libc6-compat linux-pam && \
+    apk add --no-cache bash tini libc6-compat linux-pam krb5 openldap-clients vim && \
     mkdir -p /opt/spark && \
     mkdir -p /opt/spark/work-dir && \
     touch /opt/spark/RELEASE && \
@@ -28,6 +28,9 @@ COPY bin /opt/spark/bin
 COPY sbin /opt/spark/sbin
 COPY examples /opt/spark/examples
 COPY data /opt/spark/data
+COPY krb5.conf /etc/
+COPY ldap.conf /etc/openldap/
+COPY hdfs.keytab /opt/spark/conf/
 ADD log4j.properties /opt/spark/conf/log4j.properties
 ADD start-common.sh start-worker start-master /
 

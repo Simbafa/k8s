@@ -12,9 +12,12 @@ spec:
       labels:
         component: spark-master
     spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com   # 镜像拉取秘钥
       containers:
         - name: spark-master
           image: hub.cloudx5.com/justep/spark:1.0.0
+          imagePullPolicy: Always
           command: ["/start-master"]
           ports:
             - containerPort: 7077
