@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqoop2
+  namespace: cloudai-2
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: sqoop2
+  template:
+    metadata:
+      labels:
+        app: sqoop2
+    spec:
+      imagePullSecrets:       # 远程拉取镜像，需要拉取秘钥。要先在你的k8s上创建秘钥
+      - name: hub.cloudx5.com
+      nodeName: k8s-node2     # 根据node的名称选择主机。
+      containers:
+        - name: sqoop2
+          image: hub.cloudx5.com/justep/sqoop2:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 12000
+            - containerPort: 9000
+          resources:
+            requests:
+              memory: "1024Mi"
+              cpu: "100m"
+            limits:
+              memory: "2048Mi"
+              cpu: "4000m"
+          env:
+            - name: LDAP_HOST
+              value: 10.96.100.1:389
+            - name: JOBHISTORY_ADDRESS
+              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+            - name: JOBHISTORY_WEBAPP_ADDRESS
+              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+            - name: HDFSNAMENODERPC_SERVICE_HOST
+              value: "10.96.0.5"     # 设置namenode的ip
+            - name: HDFSNAMENODERPC_SERVICE_PORT
+              value: "4231"           # 设置namenode的端口号
+            - name: MY_CPU_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: sqoop2
+                  resource: limits.cpu
+                  divisor: 1
+            - name: MY_MEM_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: sqoop2
+                  resource: limits.memory
+                  divisor: 1M
+          volumeMounts:
+            - name: fromhost
+              mountPath: /etc/hadoop/fromhost
+            - name: data
+              mountPath: /data
+      volumes:
+        - hostPath:
+            path: /sqoop2/fromhost
+          name: fromhost
+        - name: data
+          hostPath:
+            path: /sqoop2/data
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: sqoop2
+  name: sqoop2-service
+  namespace: cloudai-2
+spec:
+  ports:
+    - port: 12000
+      targetPort: 12000
+      name: tomcat
+    - port: 9000
+      targetPort: 9000
+      name: spark
+  selector:
+    app: sqoop2
+  type: NodePort
+

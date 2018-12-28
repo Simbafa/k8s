@@ -1,0 +1,3 @@
+./bin/sqoop2-shell
+set server -u http://10.0.169.180:12000/sqoop
+show version -a
