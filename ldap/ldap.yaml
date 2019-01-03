@@ -37,7 +37,7 @@ spec:
     spec:
       volumes:
         - hostPath:
-            path: /store/ldap
+            path: /nfs/ldap
           name: ldap
       imagePullSecrets:
       - name: hub.cloudx5.com

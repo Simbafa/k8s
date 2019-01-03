@@ -41,13 +41,13 @@ spec:
     spec:
       volumes:
         - hostPath:
-            path: /store/kerberos/etc/krb5.conf
+            path: /nfs/kerberos/etc/krb5.conf
           name: krb5conf
         - hostPath:
-            path: /store/kerberos/krb5kdc
+            path: /nfs/kerberos/krb5kdc
           name: krb5kdc
         - hostPath:
-            path: /store/kerberos/log
+            path: /nfs/kerberos/log
           name: log
         - hostPath:
             path: /dev/urandom

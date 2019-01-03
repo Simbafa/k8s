@@ -40,7 +40,11 @@ kadmin.local -q "xst -k yarn.keytab root/mapreduce@JUSTEP.COM"
 kadmin.local -q "xst -k yarn.keytab root/yarn-rm@JUSTEP.COM"
 kadmin.local -q "xst -k yarn.keytab root/yarn-nm@JUSTEP.COM"
 
-#yarn:
+#hive:
 kadmin.local -q "addprinc -randkey hive@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey hive/hive@JUSTEP.COM"
+kadmin.local -q "addprinc -randkey HTTP/localhost@JUSTEP.COM"
 kadmin.local -q "xst -k hive.keytab hive@JUSTEP.COM"
+kadmin.local -q "xst -k hive.keytab hive/hive@JUSTEP.COM"
+kadmin.local -q "xst -k hive.keytab HTTP/localhost@JUSTEP.COM"
 

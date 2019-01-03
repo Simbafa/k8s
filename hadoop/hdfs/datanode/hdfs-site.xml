@@ -89,11 +89,11 @@
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.principal</name>
-    <value>http/web@JUSTEP.COM</value>
+    <value>HTTP/192.168.0.121@JUSTEP.COM</value>
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.keytab</name>
-    <value>/etc/hadoop/hdfs.keytab</value>
+    <value>/etc/hadoop/webhdfs.keytab</value>
   </property>
 
 </configuration>

@@ -24,7 +24,7 @@ RUN cp -rf /hadoop-2.9.2/* /
 RUN rm -rf /hadoop-2.9.2
 RUN ldconfig
 ADD commons-daemon-1.1.0.jar /share/hadoop/hdfs/lib/commons-daemon-1.1.0.jar
-ADD hdfs.keytab /etc/hadoop/hdfs.keytab
+ADD hdfs.keytab webhdfs.keytab /etc/hadoop/
 ADD krb5.conf /etc/krb5.conf
 
 #COPY common-account common-auth common-password common-session common-session-noninteractive /etc/pam.d/
