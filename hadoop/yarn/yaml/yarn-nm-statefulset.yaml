@@ -53,9 +53,9 @@ spec:
           - name: JOBHISTORY_WEBAPP_ADDRESS
             value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
           - name: HDFSNAMENODERPC_SERVICE_HOST
-            value: "10.96.0.5"     # 设置namenode的ip
+            value: "10.96.100.5"     # 设置namenode的ip
           - name: HDFSNAMENODERPC_SERVICE_PORT
-            value: "4231"           # 设置namenode的端口号
+            value: "8020"           # 设置namenode的端口号
           - name: MY_CPU_LIMIT
             valueFrom:
               resourceFieldRef:

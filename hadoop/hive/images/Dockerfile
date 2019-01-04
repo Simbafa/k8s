@@ -13,9 +13,11 @@ ENV HIVE_HOME=/usr/local/hive
 ENV HIVE_CONF_DIR=/usr/local/hive/conf
 
 ADD mysql-connector-java-5.1.47-bin.jar /usr/local/hive/lib/
+ADD HiveAdmin-1.0.0.jar /usr/local/hive/lib/
 ADD hive-site.xml /usr/local/hive/conf/hive-site.xml
 ADD hive-env.sh /usr/local/hive/conf/hive-env.sh
 ADD hive.keytab /usr/local/hive/conf/hive.keytab
+ADD localhost.keytab /usr/local/hive/conf/localhost.keytab
 
 ADD core-site.xml.template /etc/hadoop/core-site.xml.template
 

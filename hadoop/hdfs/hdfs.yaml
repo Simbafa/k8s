@@ -7,10 +7,10 @@ spec:
   selector:
     app: hdfs-namenode    # 根据label选择pod
   type: ClusterIP         # 表示只有集群内可以访问，只能通过集群ip访问      
-  clusterIP: "10.96.0.5"  # 固定集群ip，datanode链接时要用这个集群ip
+  clusterIP: "10.96.100.5"  # 固定集群ip，datanode链接时要用这个集群ip
   ports:
     - name: rpc
-      port: 4231          # 集群ip访问的端口，设置namenode的端口号
+      port: 8020          # 集群ip访问的端口，设置namenode的端口号
       targetPort: 8020    # hdfs系统的端口，接收Client连接的RPC端口，用于获取文件系统metadata信息。
     - name: p1
       port: 50020
@@ -125,9 +125,9 @@ spec:
               mountPath: /data/dn   # 添加挂载
           env:
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.0.5"    # 设置namenode的ip
+              value: "10.96.100.5"    # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
-              value: "4231"          # 设置namenode的端口号，hbase要链接这个端口号
+              value: "8020"          # 设置namenode的端口号，hbase要链接这个端口号
           ports:
             - containerPort: 50020
             - containerPort: 50090
@@ -184,9 +184,9 @@ spec:
               mountPath: /data/dn
           env:
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.0.5"     # 设置namenode的ip
+              value: "10.96.100.5"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
-              value: "4231"           # 设置namenode的端口号
+              value: "8020"           # 设置namenode的端口号
           ports:
             - containerPort: 50020
             - containerPort: 50090

@@ -1,5 +1,7 @@
+cat /tmp/root/hive.log
+
 create database hive;
 show databases;
 use hive;
 create table hive_01 (id int,name string);
-./bin/beeline -u "jdbc:hive2://localhost:10000" -n hive -p hive
+./bin/beeline -u "jdbc:hive2://localhost:10000" -n hive -p hive --verbose=true

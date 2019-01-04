@@ -11,3 +11,4 @@
 # export HIVE_AUX_JARS_PATH=
 export SPARK_DIST_CLASSPATH=$(hadoop classpath)
 export HADOOP_CLIENT_OPTS="-Xmx512m -XX:MaxPermSize=1024m $HADOOP_CLIENT_OPTS"
+#export HIVE_AUX_JARS_PATH=file:///usr/local/hive/lib/HiveAdmin-1.0.0.jar

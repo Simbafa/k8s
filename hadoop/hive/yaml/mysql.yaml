@@ -16,6 +16,7 @@ spec:
       labels:
         app: hive-metadata-mysql
     spec:
+      nodeName: k8s-node2     # 根据node的名称选择主机。
       containers:
         - name: mysql
           image: mysql:5.7
