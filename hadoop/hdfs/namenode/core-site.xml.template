@@ -60,5 +60,30 @@
        <name>hadoop.security.group.mapping.ldap.search.attr.group.name</name>
        <value>cn</value>
      </property>
+
+      <property>
+        <name>hadoop.proxyuser.hive.hosts</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.hive.groups</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.hdfs.hosts</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.hdfs.groups</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.HTTP.hosts</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.HTTP.groups</name>
+        <value>*</value>
+      </property>
 </configuration>
 

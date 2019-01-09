@@ -8,6 +8,7 @@ docker push hub.cloudx5.com/justep/yarn-nm-spark:1.0.0
 docker push hub.cloudx5.com/justep/yarn-nm:1.0.0
 docker push hub.cloudx5.com/justep/yarn-rm:1.0.0
 docker push hub.cloudx5.com/justep/spark:1.0.0
+docker push hub.cloudx5.com/justep/hive:1.0.0
 docker push hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
 
 docker rmi $(docker images | grep '<none>'|awk '{print $3}')
