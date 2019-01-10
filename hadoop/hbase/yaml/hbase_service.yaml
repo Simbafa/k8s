@@ -7,7 +7,7 @@ spec:
   selector:
     app: hbase-master-pod-1    # 绑定pod
   type: NodePort              # ClusterIP只允许集群内访问
-  clusterIP: "10.96.9.21"    # 指定集群ip，固定ip为了能在后面更好的绑定上
+  clusterIP: "10.96.100.21"    # 指定集群ip，固定ip为了能在后面更好的绑定上
   ports:
     - name: rpc
       port: 60000
@@ -31,7 +31,7 @@ spec:
   selector:
     app: hbase-region-pod-1    # 绑定pod
   type: ClusterIP              # ClusterIP只允许集群内访问
-  clusterIP: "10.96.9.23"    # 指定集群ip，固定ip为了能在后面更好的绑定上
+  clusterIP: "10.96.100.23"    # 指定集群ip，固定ip为了能在后面更好的绑定上
   ports:
     - name: rpc
       port: 60000
@@ -49,7 +49,7 @@ spec:
   selector:
     app: hbase-region-pod-2    # 绑定pod
   type: ClusterIP              # ClusterIP只允许集群内访问
-  clusterIP: "10.96.9.24"    # 指定集群ip，固定ip为了能在后面更好的绑定上
+  clusterIP: "10.96.100.24"    # 指定集群ip，固定ip为了能在后面更好的绑定上
   ports:
     - name: rpc
       port: 60000

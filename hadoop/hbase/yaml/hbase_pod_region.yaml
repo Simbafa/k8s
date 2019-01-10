@@ -51,7 +51,7 @@ spec:
         - name: HDFS_PORT   # hdfs端口号
           value: "8020"
         - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
-          value: "10.96.9.11,10.96.9.12,10.96.9.13"   # zookeeper集群ip
+          value: "10.96.100.11,10.96.100.12,10.96.100.13"   # zookeeper集群ip
         - name: ZOOKEEPER_PORT   # zookeeper端口号
           value: "2181"
         - name: ZNODE_PARENT   # znode_parent
@@ -116,7 +116,7 @@ spec:
         - name: HDFS_PORT   # hdfs端口号
           value: "8020"
         - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
-          value: "10.96.9.11,10.96.9.12,10.96.9.13"   # zookeeper集群ip
+          value: "10.96.100.11,10.96.100.12,10.96.100.13"   # zookeeper集群ip
         - name: ZOOKEEPER_PORT   # zookeeper端口号
           value: "2181"
         - name: ZNODE_PARENT   # znode_parent

@@ -21,7 +21,7 @@ spec:
     name: zookeeper
     server-id: "1"
   type: ClusterIP          # 只能集群内部访问
-  clusterIP: 10.96.9.11    # 指定服务的集群ip，必须保障可用并且没有被占用
+  clusterIP: 10.96.100.11    # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: v1
@@ -46,7 +46,7 @@ spec:
     name: zookeeper
     server-id: "2"
   type: ClusterIP
-  clusterIP: 10.96.9.12   # 指定服务的集群ip，必须保障可用并且没有被占用
+  clusterIP: 10.96.100.12   # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: v1
@@ -71,7 +71,7 @@ spec:
     name: zookeeper
     server-id: "3"
   type: ClusterIP
-  clusterIP: 10.96.9.13  # 指定服务的集群ip，必须保障可用并且没有被占用
+  clusterIP: 10.96.100.13  # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: extensions/v1beta1
@@ -114,7 +114,7 @@ spec:
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.9.11@JUSTEP.COM"
+              value: "zookeeper/10.96.100.11@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888
@@ -168,7 +168,7 @@ spec:
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.9.12@JUSTEP.COM"
+              value: "zookeeper/10.96.100.12@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888
@@ -222,7 +222,7 @@ spec:
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.9.13@JUSTEP.COM"
+              value: "zookeeper/10.96.100.13@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888

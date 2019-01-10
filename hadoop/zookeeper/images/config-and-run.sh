@@ -12,7 +12,7 @@ klist
 echo "Start installing ldap......"
 /install_ldap.sh
 
-export JVMFLAGS="-Djava.security.auth.login.config=/opt/zookeeper/conf/jaas.conf"
+export SERVER_JVMFLAGS="-Djava.security.auth.login.config=/opt/zookeeper/conf/jaas.conf"
 
 echo "$SERVER_ID / $MAX_SERVERS" 
 if [ ! -z "$SERVER_ID" ] && [ ! -z "$MAX_SERVERS" ]; then
