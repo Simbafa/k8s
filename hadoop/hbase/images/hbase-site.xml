@@ -88,4 +88,24 @@
       <name>hbase.superuser</name>
       <value>root</value>
     </property>
+    <property>
+      <name>hbase.thrift.support.proxyuser</name>
+      <value>true</value>
+    </property>
+    <property>
+      <name>hbase.regionserver.thrift.http</name>
+      <value>true</value>
+    </property>
+    <property>
+      <name>hbase.thrift.kerberos.principal</name>
+      <value>root/_HOST@JUSTEP.COM</value>
+    </property>
+    <property>
+      <name>hbase.thrift.keytab.file</name>
+      <value>/hbase/conf/hbase.keytab</value>
+    </property>
+    <property>
+      <name>hbase.regionserver.thrift.http</name>
+      <value>true</value>
+    </property>
   </configuration>
