@@ -25,7 +25,8 @@ mkdir -p /data/hadoop-log-dir
 mkdir -p /data/yarn-log-dir
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
 cd /etc/hadoop/fromhost
 # initSchema

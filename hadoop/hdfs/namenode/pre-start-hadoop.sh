@@ -13,7 +13,8 @@ mkdir -p /data/hadoop-log-dir
 kinit -kt /etc/hadoop/hdfs.keytab root/namenode@JUSTEP.COM
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
 # start all JournalNode,  NameNode and JournalNode  in same pod
 /sbin/hadoop-daemon.sh start journalnode

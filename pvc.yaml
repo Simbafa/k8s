@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-kerberos
+  labels:
+    pv: pv-kerberos
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.0.20
+    path: "/volume1/dangdang/master/node1/kerberos"
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-kerberos
+  namespace: cloudai-2
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  selector:
+    matchLabels:
+      pv: pv-kerberos

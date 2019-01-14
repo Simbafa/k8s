@@ -30,7 +30,8 @@ do
 done
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
 ##启动master和region在同一个node上，尽在master节点上启动即可，会自动寻找
 #if [ "$MASTER_DEBUG" == "no" ]; then

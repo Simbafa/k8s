@@ -10,7 +10,8 @@ kinit -kt /opt/zookeeper/conf/zookeeper.keytab root/namenode@JUSTEP.COM
 klist 
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
 export SERVER_JVMFLAGS="-Djava.security.auth.login.config=/opt/zookeeper/conf/jaas.conf"
 

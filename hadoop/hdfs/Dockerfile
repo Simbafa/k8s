@@ -33,6 +33,7 @@ ADD krb5.conf /etc/krb5.conf
 
 ADD install_ldap.sh /install_ldap.sh
 RUN chmod +x /install_ldap.sh
+RUN /install_ldap.sh
 ENV HADOOP_CONF_DIR /etc/hadoop
 ENV PATH $PATH:/bin
 
