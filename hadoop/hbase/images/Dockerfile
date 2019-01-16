@@ -24,8 +24,8 @@ ADD hbase.keytab /hbase/conf/hbase.keytab
 ADD zk-jaas.conf /hbase/conf/zk-jaas.conf
 ADD core-site.xml /hbase/conf/core-site.xml
 ADD hdfs-site.xml /hbase/conf/hdfs-site.xml
-ADD local_policy.jar /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/security/local_policy.jar
-ADD US_export_policy.jar /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/security/US_export_policy.jar
+ADD local_policy.jar $JAVA_HOME/jre/lib/security/local_policy.jar
+ADD US_export_policy.jar $JAVA_HOME/jre/lib/security/US_export_policy.jar
 
 ADD start-k8s-hbase.sh /hbase/bin/start-k8s-hbase.sh
 RUN chmod +x /hbase/bin/start-k8s-hbase.sh

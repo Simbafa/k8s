@@ -3,3 +3,4 @@
 *.tar.gz
 *.zip
 hadoop/hive/images/mysql-connector-java-5.1.47-bin.jar
+hadoop/client/images/*.jar
