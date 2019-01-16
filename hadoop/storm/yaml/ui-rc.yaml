@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: apache-storm-ui
+  namespace: cloudai-2
+spec:
+  replicas: 1
+  selector:
+    storm: ui
+  template:
+    metadata:
+      labels:
+        storm: ui
+        app: storm
+    spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com
+      containers:
+      - name: storm-ui
+        image: hub.cloudx5.com/justep/storm:1.0.0
+        imagePullPolicy: Always
+        env:
+        - name: ZOOKEEPER_SERVERS
+          value: "10.96.100.11,10.96.100.12,10.96.100.13"
+        - name: NIMBUS_SEEDS
+          value: "10.96.100.31"
+        - name: STORM_CMD
+          value: "ui"
+        volumeMounts:
+        - name: storm-data
+          mountPath: /usr/local/apache-storm/data
+      volumes:
+      - name: storm-data
+        emptyDir: {}
+

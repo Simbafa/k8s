@@ -64,6 +64,12 @@ spec:
         - name: hdfs-namenode   # 设置容器名
           image: hub.cloudx5.com/justep/hadoop-hdfs-namenode:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           volumeMounts:
             - name: data1
               mountPath: /var/lib/hadoop-hdfs/cache/hdfs/dfs/name     # 添加挂载
@@ -118,6 +124,12 @@ spec:
         - name: hdfs-datanode-1
           image: hub.cloudx5.com/justep/hadoop-hdfs-datanode:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           volumeMounts:
             - name: data1
               mountPath: /var/lib/hadoop-hdfs/cache/hdfs/dfs/name     # 添加挂载
@@ -177,6 +189,12 @@ spec:
         - name: hdfs-datanode-2
           image: hub.cloudx5.com/justep/hadoop-hdfs-datanode:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           volumeMounts:
             - name: data1
               mountPath: /var/lib/hadoop-hdfs/cache/hdfs/dfs/name    # 添加挂载

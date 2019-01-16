@@ -37,6 +37,12 @@ spec:
       - name: yarn-nm
         image: hub.cloudx5.com/justep/yarn-nm-spark:1.0.0
         imagePullPolicy: Always
+        livenessProbe: 
+          exec: 
+              command: ["kinit", "-R"]
+          initialDelaySeconds: 300 
+          timeoutSeconds: 5 
+          periodSeconds: 1800 
         ports:
         - containerPort: 8088
           name: web

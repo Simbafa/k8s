@@ -21,6 +21,12 @@ spec:
         - name: hive
           image: hub.cloudx5.com/justep/hive:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           ports:
             - containerPort: 10000
             - containerPort: 10002

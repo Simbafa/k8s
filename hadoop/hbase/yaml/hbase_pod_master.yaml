@@ -24,6 +24,12 @@ spec:
       image: hub.cloudx5.com/justep/hadoop-hbase:1.0.0
       imagePullPolicy: Always
       command: ["/usr/bin/supervisord"]
+      livenessProbe: 
+          exec: 
+              command: ["kinit", "-R"]
+          initialDelaySeconds: 300 
+          timeoutSeconds: 5 
+          periodSeconds: 1800 
       volumeMounts:
         - name: data
           mountPath: /hbase/data     # 添加挂载

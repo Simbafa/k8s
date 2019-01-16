@@ -108,6 +108,12 @@ spec:
         - name: server
           image: hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           env:
             - name: SERVER_ID
               value: "1"
@@ -162,6 +168,12 @@ spec:
         - name: server
           image: hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           env:
             - name: SERVER_ID
               value: "2"
@@ -216,6 +228,12 @@ spec:
         - name: server
           image: hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           env:
             - name: SERVER_ID
               value: "3"
