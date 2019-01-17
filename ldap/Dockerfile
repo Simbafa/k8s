@@ -12,8 +12,11 @@ RUN mv /etc/ldap/slapd.d /etc/ldap/slapd.d.cache
 
 EXPOSE 389
 
-COPY entrypoint.sh schema_convert.conf /
+COPY config_ldap.sh entrypoint.sh schema_convert.conf /
 COPY kerberos.schema /etc/ldap/schema/
 COPY slapd.conf /
+
+RUN chmod +x /config_ldap.sh
+RUN /config_ldap.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

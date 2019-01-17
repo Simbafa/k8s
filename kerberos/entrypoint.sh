@@ -85,8 +85,7 @@ $LDAP_PASS
 $KERB_ADMIN_PASS
 $KERB_ADMIN_PASS
 EOF
-  #/usr/sbin/kdb5_ldap_util -D cn=$LDAP_USER,$LDAP_DC stashsrvpw -f /etc/krb5kdc/service.keyfile cn=$LDAP_USER,$LDAP_DC <<EOF
-  /usr/sbin/kdb5_ldap_util -D cn=$LDAP_USER.,$LDAP_DC stashsrvpw -f /var/kerberos/krb5kdc/service.keyfile cn=$LDAP_USER,$LDAP_DC <<EOF
+  /usr/sbin/kdb5_ldap_util -D cn=$LDAP_USER,$LDAP_DC stashsrvpw -f /var/kerberos/krb5kdc/service.keyfile cn=$LDAP_USER,$LDAP_DC <<EOF
 $LDAP_PASS
 $LDAP_PASS
 $LDAP_PASS
@@ -94,8 +93,6 @@ EOF
 }
 
 start_kdc() {
-  #  service krb5-kdc start
-  #  service krb5-admin-server start
   /etc/rc.d/init.d/krb5kdc start
   /etc/rc.d/init.d/kadmin start
 
@@ -104,15 +101,12 @@ start_kdc() {
 }
 
 restart_kdc() {
-  #  service krb5-kdc restart
-  #  service krb5-admin-server restart
   /etc/rc.d/init.d/krb5kdc restart
   /etc/rc.d/init.d/kadmin restart
 }
 
 create_admin_user() {
   kadmin.local -q "addprinc -pw $KERB_ADMIN_PASS $KERB_ADMIN_USER/admin"
- # echo "*/admin@$REALM *" > /etc/krb5kdc/kadm5.acl
   echo "*/admin@$REALM *" > /var/kerberos/krb5kdc/kadm5.acl
 }
 
