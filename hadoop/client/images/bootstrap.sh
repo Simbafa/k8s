@@ -12,5 +12,9 @@ export HBASE_MANAGES_ZK=false
 
 /etc/init.d/nscd restart  
 
+echo "10.0.10.21 hbase-master-1" >> /etc/hosts
+echo "10.0.10.23 hbase-region-1" >> /etc/hosts
+echo "10.0.10.24 hbase-region-2" >> /etc/hosts
+
 while true; do sleep 1000; done
 

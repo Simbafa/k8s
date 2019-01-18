@@ -31,3 +31,5 @@ EOF
 
 dpkg-reconfigure -f noninteractive slapd
 
+egrep -q '^BASE' /etc/ldap/ldap.conf || echo -e "BASE \t $LDAP_DC" >> /etc/ldap/ldap.conf
+

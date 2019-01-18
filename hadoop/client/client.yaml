@@ -79,7 +79,7 @@ spec:
                   divisor: 1M
           volumeMounts:
             - name: fromhost
-              mountPath: /etc/hadoop/fromhost
+              mountPath: /usr/local/fromhost
       volumes:
         - hostPath:
             path: /hadoop-client/fromhost

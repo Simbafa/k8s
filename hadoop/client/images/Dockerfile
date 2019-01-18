@@ -56,6 +56,8 @@ ENV PATH $PATH:/usr/local/hive/bin
 
 WORKDIR /usr/local
 
+# -Dsun.security.krb5.debug=true
+
 ADD bootstrap.sh /bootstrap.sh
 RUN chmod a+x /bootstrap.sh
 ENTRYPOINT /bootstrap.sh 
