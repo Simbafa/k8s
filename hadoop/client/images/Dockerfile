@@ -7,7 +7,10 @@ USER root
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
-    apt-get install -y -q curl krb5-user libpam-krb5 libpam-ccreds vim libcap2 net-tools iputils-ping iproute2
+    apt-get install -y -q curl krb5-user libpam-krb5 libpam-ccreds vim libcap2 net-tools iputils-ping iproute2 openssh-server
+
+RUN sed -i s/#PubkeyAuthentication.*/PubkeyAuthentication\ yes/ /etc/ssh/sshd_config && \
+    sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config
 
 ADD jdk-8u191-linux-x64.tar.gz /usr/local/
 
@@ -61,4 +64,8 @@ WORKDIR /usr/local
 ADD bootstrap.sh /bootstrap.sh
 RUN chmod a+x /bootstrap.sh
 ENTRYPOINT /bootstrap.sh 
+
+#RUN echo 'root:root' | chpasswd
+
+EXPOSE 22
 

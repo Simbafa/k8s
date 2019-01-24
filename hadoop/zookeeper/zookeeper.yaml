@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-1
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
   labels:
       name: zookeeper-1
 spec:
@@ -21,14 +21,13 @@ spec:
     name: zookeeper
     server-id: "1"
   type: ClusterIP          # 只能集群内部访问
-  clusterIP: 10.96.100.11    # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-2
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
   labels:
       name: zookeeper-2
 spec:
@@ -46,14 +45,13 @@ spec:
     name: zookeeper
     server-id: "2"
   type: ClusterIP
-  clusterIP: 10.96.100.12   # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-3
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
   labels:
       name: zookeeper-3
 spec:
@@ -71,14 +69,13 @@ spec:
     name: zookeeper
     server-id: "3"
   type: ClusterIP
-  clusterIP: 10.96.100.13  # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: zookeeper-1
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -120,7 +117,7 @@ spec:
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.100.11@JUSTEP.COM"
+              value: "zookeeper/zookeeper-1.bigdata.svc.cluster.local@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888
@@ -138,7 +135,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: zookeeper-2
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -180,7 +177,7 @@ spec:
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.100.12@JUSTEP.COM"
+              value: "zookeeper/zookeeper-2.bigdata.svc.cluster.local@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888
@@ -198,7 +195,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: zookeeper-3
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -240,7 +237,7 @@ spec:
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.100.13@JUSTEP.COM"
+              value: "zookeeper/zookeeper-3.bigdata.svc.cluster.local@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888

@@ -2,7 +2,7 @@ kind: ReplicationController
 apiVersion: v1
 metadata:
   name: spark-ui-proxy-controller
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   replicas: 1
   selector:

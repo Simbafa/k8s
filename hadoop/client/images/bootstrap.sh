@@ -10,7 +10,8 @@ export HBASE_MANAGES_ZK=false
 . /usr/local/hbase/conf/hbase-env.sh
 . /libexec/yarn-config.sh
 
-/etc/init.d/nscd restart  
+/etc/init.d/nscd start  
+/etc/init.d/ssh start
 
 echo "10.0.10.21 hbase-master-1" >> /etc/hosts
 echo "10.0.10.23 hbase-region-1" >> /etc/hosts

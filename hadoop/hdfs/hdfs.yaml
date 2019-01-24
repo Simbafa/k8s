@@ -2,12 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hdfs-namenode-service   # 设置服务名
-  namespace: cloudai-2          # 设置命名空间
+  namespace: bigdata          # 设置命名空间
 spec:
   selector:
     app: hdfs-namenode    # 根据label选择pod
   type: ClusterIP         # 表示只有集群内可以访问，只能通过集群ip访问      
-  clusterIP: "10.96.100.5"  # 固定集群ip，datanode链接时要用这个集群ip
   ports:
     - name: rpc
       port: 8020          # 集群ip访问的端口，设置namenode的端口号
@@ -46,7 +45,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
     name: hdfs-namenode-1
-    namespace: cloudai-2
+    namespace: bigdata
 spec:
   selector:    
     matchLabels:
@@ -104,7 +103,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
     name: hdfs-datanode-1
-    namespace: cloudai-2
+    namespace: bigdata
 spec:
   selector:    
     matchLabels:
@@ -137,7 +136,7 @@ spec:
               mountPath: /data/dn   # 添加挂载
           env:
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.100.5"    # 设置namenode的ip
+              value: "hdfs-namenode-service.bigdata.svc.cluster.local"    # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"          # 设置namenode的端口号，hbase要链接这个端口号
           ports:
@@ -169,7 +168,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
     name: hdfs-datanode-2
-    namespace: cloudai-2
+    namespace: bigdata
 spec:
   selector:    
     matchLabels:
@@ -202,7 +201,7 @@ spec:
               mountPath: /data/dn
           env:
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.100.5"     # 设置namenode的ip
+              value: "hdfs-namenode-service.bigdata.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"           # 设置namenode的端口号
           ports:

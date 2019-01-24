@@ -22,7 +22,7 @@
      </property>
      <property>
         <name>hadoop.security.group.mapping.ldap.url</name>
-        <value>ldap://10.96.100.1:389</value>
+        <value>ldap://ldap-1.bigdata.svc.cluster.local:389</value>
      </property>
      <property>
         <name>hadoop.security.group.mapping.ldap.bind.user</name>
@@ -70,6 +70,10 @@
         <value>*</value>
       </property>
       <property>
+        <name>hadoop.proxyuser.root.users</name>
+        <value>*</value>
+      </property>
+      <property>
         <name>hadoop.proxyuser.hive.hosts</name>
         <value>*</value>
       </property>
@@ -91,6 +95,10 @@
       </property>
       <property>
         <name>hadoop.proxyuser.HTTP.groups</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.HTTP.users</name>
         <value>*</value>
       </property>
 </configuration>

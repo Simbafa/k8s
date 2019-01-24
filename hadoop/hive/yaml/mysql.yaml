@@ -4,7 +4,7 @@ metadata:
   labels:
     app: hive-metadata-mysql
   name: hive-metadata-mysql
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -48,7 +48,7 @@ metadata:
   labels:
     app: hive-metadata-mysql
   name: hive-metadata-mysql-service
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   ports:
     - name: tcp

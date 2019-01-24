@@ -1,7 +1,7 @@
 #! /bin/bash  
   
 #Ldap server地址及base DN  
-LDAP_SERVER_IP=10.96.100.1
+LDAP_SERVER_IP=ldap-1.bigdata.svc.cluster.local
 BASE_DN='dc=justep,dc=com'  
   
 #--------------------------------------------------------------------------------  

@@ -9,3 +9,14 @@ rm /etc/kubernetes/ -fr
 # 
 kubeadm token create
 
+容器启动次序：
+这些容器有很强的依赖关系，需要按指定的顺序启动，否则服务会有问题，要求的顺序如下：
+1. ldap
+2. kerberos
+3. hdfs:namenode, datanode
+4. yarn:resourcemanager, datamanager
+5. zookeeper
+6. hbase: master, region
+7. hive
+8. client
+9. multi-tenancy

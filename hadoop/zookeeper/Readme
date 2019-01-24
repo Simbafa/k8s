@@ -1,5 +1,6 @@
 
-bin/zkCli.sh -server 10.96.100.11:2181
+./bin/zkServer.sh status
+./bin/zkCli.sh -server 10.96.100.11:2181
 ls /
 create /test test
 get /test test

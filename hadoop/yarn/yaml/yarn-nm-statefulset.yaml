@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: yarn-nm
-  namespace: cloudai-2
+  namespace: bigdata
   labels:
     component: yarn-nm
 spec:
@@ -12,7 +12,6 @@ spec:
     name: web
   - port: 8082
     name: web2
-  # *.yarn-nm.yarn-cluster.svc.cluster.local
   clusterIP: None
   selector:
     component: yarn-nm
@@ -21,7 +20,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: yarn-nm
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   serviceName: "yarn-nm"
   replicas: 2
@@ -55,11 +54,11 @@ spec:
             cpu: "4000m"
         env:
           - name: JOBHISTORY_ADDRESS
-            value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+            value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:10020
           - name: JOBHISTORY_WEBAPP_ADDRESS
-            value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+            value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:19888
           - name: HDFSNAMENODERPC_SERVICE_HOST
-            value: "10.96.100.5"     # 设置namenode的ip
+            value: "hdfs-namenode-service.bigdata.svc.cluster.local"     # 设置namenode的ip
           - name: HDFSNAMENODERPC_SERVICE_PORT
             value: "8020"           # 设置namenode的端口号
           - name: MY_CPU_LIMIT

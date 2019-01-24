@@ -18,7 +18,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-kerberos
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   accessModes:
     - ReadWriteMany

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   name: apache-storm-nimbus
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   replicas: 1
   selector:
@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: ZOOKEEPER_SERVERS
-          value: "10.96.100.11,10.96.100.12,10.96.100.13"
+          value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"
         - name: NIMBUS_SEEDS
           value: "10.96.100.31"
         - name: STORM_CMD

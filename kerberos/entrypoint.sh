@@ -13,13 +13,6 @@
 : ${LDAP_PASS:=admin}
 : ${LDAP_URL:=ldap://ldap}
 
-fix_nameserver() {
-  cat>/etc/resolv.conf<<EOF
-nameserver $NAMESERVER_IP
-search $SEARCH_DOMAINS
-EOF
-}
-
 fix_hostname() {
   sed -i "/^hosts:/ s/ *files dns/ dns files/" /etc/nsswitch.conf
 }
@@ -112,7 +105,6 @@ create_admin_user() {
 
 main() {
    mkdir -p /var/log/kerberos
-  fix_nameserver
   fix_hostname
 
   if [ ! -f /var/kerberos/krb5kdc/kerberos_initialized ]; then

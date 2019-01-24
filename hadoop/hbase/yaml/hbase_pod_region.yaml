@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod                     # 使用pod能固定容器的名称，但是不能设置副本数，所以要注意。
 metadata:
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
   name: hbase-region-1
   labels:
     app: hbase-region-pod-1
@@ -53,18 +53,17 @@ spec:
         - name: HBASE_REGION_INFO_PORT   # hbase的region的信息端口号
           value: "60011"
         - name: HDFS_SERVICE   # hdfs服务，HDFS_SERVICE为HDFS服务经过skyDNS之后的对应域名，若未设置skyDNS则此处值设为HDFS服务对应的IP地址
-          value: "10.96.100.5"   # hdfs的集群ip
+          value: "hdfs-namenode-service.bigdata.svc.cluster.local"   # hdfs的集群ip
         - name: HDFS_PORT   # hdfs端口号
           value: "8020"
         - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
-          value: "10.96.100.11,10.96.100.12,10.96.100.13"   # zookeeper集群ip
+          value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"   # zookeeper集群ip
         - name: ZOOKEEPER_PORT   # zookeeper端口号
           value: "2181"
         - name: ZNODE_PARENT   # znode_parent
           value: hbase
         - name: HBASE_MASTER_LIST  
           value: "10.0.10.21:hbase-master-1"
-        #  #value: "10.96.9.21:hbase-master-1 10.96.9.22:hbase-master-2"
         - name: HBASE_REGION_LIST  # 为HBase集群中除当前regionserver外的其余regionserver的服务地址和pod名的对应关系
           value: "10.0.10.24:hbase-region-2"
   restartPolicy: Always     #　表示如果该Pod挂掉的话将一直尝试重新启动它
@@ -72,7 +71,7 @@ spec:
 apiVersion: v1
 kind: Pod                     # 使用pod能固定容器的名称，但是不能设置副本数，所以要注意。
 metadata:
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
   name: hbase-region-2
   labels:
     app: hbase-region-pod-2
@@ -124,11 +123,11 @@ spec:
         - name: HBASE_REGION_INFO_PORT   # hbase的region的信息端口号
           value: "60011"
         - name: HDFS_SERVICE   # hdfs服务，HDFS_SERVICE为HDFS服务经过skyDNS之后的对应域名，若未设置skyDNS则此处值设为HDFS服务对应的IP地址
-          value: "10.96.100.5"   # hdfs的集群ip
+          value: "hdfs-namenode-service.bigdata.svc.cluster.local"   # hdfs的集群ip
         - name: HDFS_PORT   # hdfs端口号
           value: "8020"
         - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
-          value: "10.96.100.11,10.96.100.12,10.96.100.13"   # zookeeper集群ip
+          value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"   # zookeeper集群ip
         - name: ZOOKEEPER_PORT   # zookeeper端口号
           value: "2181"
         - name: ZNODE_PARENT   # znode_parent

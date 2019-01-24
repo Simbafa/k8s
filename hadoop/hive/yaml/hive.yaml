@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hive
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -40,13 +40,13 @@ spec:
               cpu: "4000m"
           env:
             - name: LDAP_HOST
-              value: 10.96.100.1:389
+              value: ldap-1.bigdata.svc.cluster.local:389
             - name: JOBHISTORY_ADDRESS
-              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:10020
             - name: JOBHISTORY_WEBAPP_ADDRESS
-              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.100.5"     # 设置namenode的ip
+              value: "hdfs-namenode-service.bigdata.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"           # 设置namenode的端口号
             - name: MY_CPU_LIMIT
@@ -77,7 +77,7 @@ metadata:
   labels:
     app: hive
   name: hive-service
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   ports:
     - port: 10000

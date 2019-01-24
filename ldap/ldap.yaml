@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ldap-1
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
   labels:
       name: ldap-1
 spec:
@@ -15,14 +15,13 @@ spec:
     name: ldap
     server-id: "1"
   type: ClusterIP         # 只能集群内部访问
-  clusterIP: 10.96.100.1    # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: ldap-1
-  namespace: cloudai-2     # 设置命名空间
+  namespace: bigdata     # 设置命名空间
 spec:
   selector:    
     matchLabels:

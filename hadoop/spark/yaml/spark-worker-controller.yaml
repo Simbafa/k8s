@@ -2,7 +2,7 @@ kind: ReplicationController
 apiVersion: v1
 metadata:
   name: spark-worker-controller
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   replicas: 2
   selector:

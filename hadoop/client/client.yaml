@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hadoop-client
-  namespace: cloudai-2
+  namespace: bigdata
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -21,14 +21,8 @@ spec:
         - name: hadoop-client
           image: hub.cloudx5.com/justep/hadoop-client:1.0.0
           imagePullPolicy: Always
-          livenessProbe: 
-              exec: 
-                  command: ["kinit", "-R"]
-              initialDelaySeconds: 300 
-              timeoutSeconds: 5 
-              periodSeconds: 1800 
           ports:
-            - containerPort: 10000
+            - containerPort: 22
           resources:
             requests:
               memory: "1024Mi"
@@ -38,13 +32,13 @@ spec:
               cpu: "4000m"
           env:
             - name: LDAP_HOST
-              value: 10.96.100.1:389
+              value: ldap-1.bigdata.svc.cluster.local:389
             - name: JOBHISTORY_ADDRESS
-              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:10020
             - name: JOBHISTORY_WEBAPP_ADDRESS
-              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.100.5"
+              value: "hdfs-namenode-service.bigdata.svc.cluster.local"
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"
             - name: HBASE_MASTER_PORT
@@ -56,11 +50,11 @@ spec:
             - name: HBASE_REGION_INFO_PORT
               value: "60011"
             - name: HDFS_SERVICE
-              value: "10.96.100.5"
+              value: "hdfs-namenode-service.bigdata.svc.cluster.local"
             - name: HDFS_PORT
               value: "8020"
             - name: ZOOKEEPER_SERVICE_LIST
-              value: "10.96.100.11,10.96.100.12,10.96.100.13"
+              value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"
             - name: ZOOKEEPER_PORT
               value: "2181"
             - name: ZNODE_PARENT
@@ -87,25 +81,18 @@ spec:
 
 ---
 
-#kind: Service
-#apiVersion: v1
-#metadata:
-#  labels:
-#    app: hadoop-client
-#  name: hadoop-client-service
-#  namespace: cloudai-2
-#spec:
-#  ports:
-#    - port: 10000
-#      targetPort: 10000
-#      name: thrift
-#    - port: 10002
-#      targetPort: 10002
-#      name: webui
-#    - port: 9083
-#      targetPort: 9083
-#      name: metastore
-#  selector:
-#    app: hadoop-client
-#  type: NodePort
-#
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: hadoop-client
+  name: hadoop-client-service
+  namespace: bigdata
+spec:
+  ports:
+    - port: 2222
+      targetPort: 22
+      name: sshd
+  selector:
+    app: hadoop-client
+

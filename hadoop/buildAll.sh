@@ -28,4 +28,7 @@ cd $CURRENT_DIR/zookeeper/images
 cd $CURRENT_DIR/hive/images
 ./build.sh true
 
+cd $CURRENT_DIR/client/images
+./build.sh true
+
 docker rmi $(docker images | grep "<none>" | awk '{print $3}')
