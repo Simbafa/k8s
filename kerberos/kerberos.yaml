@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kerberos-1
-  namespace: bigdata     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
   labels:
       name: kerberos-1
 spec:
@@ -25,7 +25,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: kerberos-1
-  namespace: bigdata     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -54,13 +54,17 @@ spec:
       imagePullSecrets:
       - name: hub.cloudx5.com
       nodeName: k8s-node1
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/justep/busybox:1.30
+        command: ["sh", "-c", "until nslookup ldap-1; do echo waiting for ldap-1; sleep 2; done;"]
       containers:
         - name: server
           image: hub.cloudx5.com/justep/kerberos-ldap:1.0.0
           imagePullPolicy: Always
           env:
             - name: LDAP_URL
-              value: "ldap://ldap-1.bigdata.svc.cluster.local:389"
+              value: "ldap://ldap-1.hadoop.svc.cluster.local:389"
           ports:
             - containerPort: 88
             - containerPort: 749

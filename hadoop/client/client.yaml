@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hadoop-client
-  namespace: bigdata
+  namespace: hadoop
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -17,6 +17,10 @@ spec:
       imagePullSecrets:       # 远程拉取镜像，需要拉取秘钥。要先在你的k8s上创建秘钥
       - name: hub.cloudx5.com
       nodeName: k8s-node2     # 根据node的名称选择主机。
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/justep/busybox:1.30
+        command: ["sh", "-c", "until nslookup hive-service; do echo waiting for hive-service; sleep 2; done;"]
       containers:
         - name: hadoop-client
           image: hub.cloudx5.com/justep/hadoop-client:1.0.0
@@ -32,13 +36,13 @@ spec:
               cpu: "4000m"
           env:
             - name: LDAP_HOST
-              value: ldap-1.bigdata.svc.cluster.local:389
+              value: ldap-1.hadoop.svc.cluster.local:389
             - name: JOBHISTORY_ADDRESS
-              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:10020
+              value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:10020
             - name: JOBHISTORY_WEBAPP_ADDRESS
-              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:19888
+              value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "hdfs-namenode-service.bigdata.svc.cluster.local"
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"
             - name: HBASE_MASTER_PORT
@@ -50,11 +54,11 @@ spec:
             - name: HBASE_REGION_INFO_PORT
               value: "60011"
             - name: HDFS_SERVICE
-              value: "hdfs-namenode-service.bigdata.svc.cluster.local"
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"
             - name: HDFS_PORT
               value: "8020"
             - name: ZOOKEEPER_SERVICE_LIST
-              value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"
+              value: "zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local"
             - name: ZOOKEEPER_PORT
               value: "2181"
             - name: ZNODE_PARENT
@@ -87,7 +91,7 @@ metadata:
   labels:
     app: hadoop-client
   name: hadoop-client-service
-  namespace: bigdata
+  namespace: hadoop
 spec:
   ports:
     - port: 2222

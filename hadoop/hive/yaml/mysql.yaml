@@ -4,7 +4,7 @@ metadata:
   labels:
     app: hive-metadata-mysql
   name: hive-metadata-mysql
-  namespace: bigdata
+  namespace: hadoop
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -48,7 +48,7 @@ metadata:
   labels:
     app: hive-metadata-mysql
   name: hive-metadata-mysql-service
-  namespace: bigdata
+  namespace: hadoop
 spec:
   ports:
     - name: tcp

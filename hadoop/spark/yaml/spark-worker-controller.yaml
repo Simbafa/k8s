@@ -2,7 +2,7 @@ kind: ReplicationController
 apiVersion: v1
 metadata:
   name: spark-worker-controller
-  namespace: bigdata
+  namespace: hadoop
 spec:
   replicas: 2
   selector:

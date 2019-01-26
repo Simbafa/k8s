@@ -1,5 +1,3 @@
-# java home
-export JAVA_HOME="/usr/local/jdk1.8.0_191"
 export HADOOP_CONF_DIR="/etc/hadoop"
 # LOG FILE
 export HADOOP_LOG_DIR="/data/hadoop-log-dir"

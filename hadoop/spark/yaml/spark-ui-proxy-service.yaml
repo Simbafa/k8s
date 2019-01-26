@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: spark-ui-proxy
-  namespace: bigdata
+  namespace: hadoop
 spec:
   ports:
     - port: 80

@@ -1,5 +1,3 @@
-# java home
-export JAVA_HOME="/usr/local/jdk1.8.0_191"
 
 export HADOOP_CONF_DIR="/etc/hadoop"
 export YARN_CONF_DIR="/etc/hadoop"

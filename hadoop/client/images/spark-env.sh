@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-export JAVA_HOME="/usr/local/jdk1.8.0_191"
 export SPARK_HOME="/usr/local/spark"
 export SCALA_HOME="/usr/local/scala"
 export HADOOP_HOME=""

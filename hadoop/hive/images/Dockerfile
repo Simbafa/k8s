@@ -3,7 +3,7 @@
 
 FROM hub.cloudx5.com/justep/yarn-nm-spark:1.0.0
 
-ADD apache-hive-2.1.1-bin.tar.gz /
+RUN curl -L --user x5:x5 ftp://192.168.0.254:6021/docker-bin-files/hadoop/apache-hive-2.1.1-bin.tar.gz | tar -xzf - -C /
 RUN mv /apache-hive-2.1.1-bin /usr/local/hive
 WORKDIR /usr/local/hive
 

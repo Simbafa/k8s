@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod                     # 使用pod能固定容器的名称，但是不能设置副本数，所以要注意。
 metadata:
-  namespace: bigdata     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
   name: hbase-master-1
   labels:
     app: hbase-master-pod-1
@@ -19,6 +19,10 @@ spec:
     - hostPath: 
         path: /hbase/master/fromhost
       name: fromhost
+  initContainers:
+  - name: dependency-checker
+    image: hub.cloudx5.com/justep/busybox:1.30
+    command: ["sh", "-c", "until nslookup zookeeper-1; do echo waiting for zookeeper-1; sleep 2; done;"]
   containers:
     - name: hbase-master-1
       image: hub.cloudx5.com/justep/hadoop-hbase:1.0.0
@@ -55,11 +59,11 @@ spec:
         - name: HBASE_REGION_INFO_PORT   # hbase的region的信息端口号
           value: "60011"
         - name: HDFS_SERVICE   # hdfs服务，HDFS_SERVICE为HDFS服务经过skyDNS之后的对应域名，若未设置skyDNS则此处值设为HDFS服务对应的IP地址
-          value: "hdfs-namenode-service.bigdata.svc.cluster.local"   # hdfs的集群ip
+          value: "hdfs-namenode-service.hadoop.svc.cluster.local"   # hdfs的集群ip
         - name: HDFS_PORT   # hdfs端口号
           value: "8020"
         - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
-          value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"   # zookeeper集群ip
+          value: "zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local"   # zookeeper集群ip
         - name: ZOOKEEPER_PORT   # zookeeper端口号
           value: "2181"
         - name: ZNODE_PARENT   # znode_parent

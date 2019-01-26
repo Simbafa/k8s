@@ -1,7 +1,7 @@
   <configuration>
       <property>
           <name>fs.defaultFS</name>
-          <value>hdfs://hdfs-namenode-service.bigdata.svc.cluster.local:8020</value>
+          <value>hdfs://hdfs-namenode-service.hadoop.svc.cluster.local:8020</value>
       </property>
       <property>
           <name>hadoop.proxyuser.hduser.groups</name>

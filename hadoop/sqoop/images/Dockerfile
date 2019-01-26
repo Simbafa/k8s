@@ -8,7 +8,7 @@ ENV HADOOP_MAPRED_HOME=$HADOOP_HOME/share/hadoop/mapreduce
 ENV HADOOP_YARN_HOME=$HADOOP_HOME/share/hadoop/yarn
 ENV PATH $SQOOP_HOME/bin:$PATH
 
-ADD sqoop-1.99.7-bin-hadoop200.tar.gz /
+RUN wget -q -O - https://archive.apache.org/dist/sqoop/1.99.7/sqoop-1.99.7-bin-hadoop200.tar.gz | tar -xzf - -C /
 RUN mv /sqoop-1.99.7-bin-hadoop200 $SQOOP_HOME
 RUN cp /usr/local/hive/lib/mysql-connector-java-5.1.47-bin.jar $SQOOP_HOME/server/lib
 ADD entrypoint.sh $SQOOP_HOME/

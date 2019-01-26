@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hdfs-namenode-service   # 设置服务名
-  namespace: bigdata          # 设置命名空间
+  namespace: hadoop          # 设置命名空间
 spec:
   selector:
     app: hdfs-namenode    # 根据label选择pod
@@ -45,7 +45,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
     name: hdfs-namenode-1
-    namespace: bigdata
+    namespace: hadoop
 spec:
   selector:    
     matchLabels:
@@ -59,6 +59,10 @@ spec:
       imagePullSecrets:       # 远程拉取镜像，需要拉取秘钥。要先在你的k8s上创建秘钥
       - name: hub.cloudx5.com
       nodeName: k8s-node1     # 根据node的名称选择主机。
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/justep/busybox:1.30
+        command: ["sh", "-c", "until nslookup kerberos-1; do echo waiting for kerberos-1; sleep 2; done;"]
       containers:
         - name: hdfs-namenode   # 设置容器名
           image: hub.cloudx5.com/justep/hadoop-hdfs-namenode:1.0.0
@@ -103,7 +107,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
     name: hdfs-datanode-1
-    namespace: bigdata
+    namespace: hadoop
 spec:
   selector:    
     matchLabels:
@@ -119,6 +123,10 @@ spec:
       imagePullSecrets:
       - name: hub.cloudx5.com
       nodeName: k8s-node2   # 根据node的名称选择主机。
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/justep/busybox:1.30
+        command: ["sh", "-c", "until nslookup hdfs-namenode-service; do echo waiting for hdfs-namenode-service; sleep 2; done;"]
       containers:
         - name: hdfs-datanode-1
           image: hub.cloudx5.com/justep/hadoop-hdfs-datanode:1.0.0
@@ -136,7 +144,7 @@ spec:
               mountPath: /data/dn   # 添加挂载
           env:
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "hdfs-namenode-service.bigdata.svc.cluster.local"    # 设置namenode的ip
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"    # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"          # 设置namenode的端口号，hbase要链接这个端口号
           ports:
@@ -168,7 +176,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
     name: hdfs-datanode-2
-    namespace: bigdata
+    namespace: hadoop
 spec:
   selector:    
     matchLabels:
@@ -184,6 +192,10 @@ spec:
       imagePullSecrets:
       - name: hub.cloudx5.com
       nodeName: k8s-monitor   # 根据node的名称选择主机。
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/justep/busybox:1.30
+        command: ["sh", "-c", "until nslookup hdfs-namenode-service; do echo waiting for hdfs-namenode-service; sleep 2; done;"]
       containers:
         - name: hdfs-datanode-2
           image: hub.cloudx5.com/justep/hadoop-hdfs-datanode:1.0.0
@@ -201,7 +213,7 @@ spec:
               mountPath: /data/dn
           env:
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "hdfs-namenode-service.bigdata.svc.cluster.local"     # 设置namenode的ip
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"           # 设置namenode的端口号
           ports:

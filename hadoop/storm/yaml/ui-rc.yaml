@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   name: apache-storm-ui
-  namespace: bigdata
+  namespace: hadoop
 spec:
   replicas: 1
   selector:
@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: ZOOKEEPER_SERVERS
-          value: "zookeeper-1.bigdata.svc.cluster.local,zookeeper-2.bigdata.svc.cluster.local,zookeeper-3.bigdata.svc.cluster.local"
+          value: "zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local"
         - name: NIMBUS_SEEDS
           value: "10.96.100.31"
         - name: STORM_CMD

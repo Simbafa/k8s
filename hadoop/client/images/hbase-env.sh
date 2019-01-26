@@ -1,4 +1,3 @@
-export JAVA_HOME=/usr/local/jdk1.8.0_191
 export HBASE_CLASSPATH=/usr/local/hbase/conf
 export HBASE_MANAGES_ZK=false
 export HBASE_HOME=/usr/local/hbase

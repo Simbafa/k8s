@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sqoop2
-  namespace: bigdata
+  namespace: hadoop
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -33,13 +33,13 @@ spec:
               cpu: "4000m"
           env:
             - name: LDAP_HOST
-              value: ldap-1.bigdata.svc.cluster.local:389
+              value: ldap-1.hadoop.svc.cluster.local:389
             - name: JOBHISTORY_ADDRESS
-              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:10020
+              value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:10020
             - name: JOBHISTORY_WEBAPP_ADDRESS
-              value: yarn-rm-0.yarn-rm.bigdata.svc.cluster.local:19888
+              value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "hdfs-namenode-service.bigdata.svc.cluster.local"     # 设置namenode的ip
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"           # 设置namenode的端口号
             - name: MY_CPU_LIMIT
@@ -75,7 +75,7 @@ metadata:
   labels:
     app: sqoop2
   name: sqoop2-service
-  namespace: bigdata
+  namespace: hadoop
 spec:
   ports:
     - port: 12000

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hbase-master-1
-  namespace: bigdata     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:
     app: hbase-master-pod-1    # 绑定pod
@@ -21,7 +21,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hbase-region-1
-  namespace: bigdata     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:
     app: hbase-region-pod-1    # 绑定pod
@@ -37,7 +37,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hbase-region-2
-  namespace: bigdata     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:
     app: hbase-region-pod-2    # 绑定pod

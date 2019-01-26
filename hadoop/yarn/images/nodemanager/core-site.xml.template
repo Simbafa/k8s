@@ -22,7 +22,7 @@
      </property>
      <property>
         <name>hadoop.security.group.mapping.ldap.url</name>
-        <value>ldap://ldap-1.bigdata.svc.cluster.local:389</value>
+        <value>ldap://ldap-1.hadoop.svc.cluster.local:389</value>
      </property>
      <property>
         <name>hadoop.security.group.mapping.ldap.bind.user</name>

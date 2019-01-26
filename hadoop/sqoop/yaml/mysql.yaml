@@ -4,7 +4,7 @@ metadata:
   labels:
     app: sqoop2-metadata-mysql
   name: sqoop2-metadata-mysql
-  namespace: bigdata
+  namespace: hadoop
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -47,7 +47,7 @@ metadata:
   labels:
     app: sqoop2-metadata-mysql
   name: sqoop2-metadata-mysql-service
-  namespace: bigdata
+  namespace: hadoop
 spec:
   ports:
     - name: tcp
