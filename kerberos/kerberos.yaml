@@ -56,7 +56,7 @@ spec:
       nodeName: k8s-node1
       initContainers:
       - name: dependency-checker
-        image: hub.cloudx5.com/justep/busybox:1.30
+        image: hub.cloudx5.com/busybox:1.30
         command: ["sh", "-c", "until nslookup ldap-1; do echo waiting for ldap-1; sleep 2; done;"]
       containers:
         - name: server

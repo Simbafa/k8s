@@ -19,7 +19,7 @@ spec:
       nodeName: k8s-node2     # 根据node的名称选择主机。
       initContainers:
       - name: dependency-checker
-        image: hub.cloudx5.com/justep/busybox:1.30
+        image: hub.cloudx5.com/busybox:1.30
         command: ["sh", "-c", "until nslookup hive-service; do echo waiting for hive-service; sleep 2; done;"]
       containers:
         - name: hadoop-client

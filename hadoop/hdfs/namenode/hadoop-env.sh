@@ -1,3 +1,5 @@
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
 export HADOOP_CONF_DIR="/etc/hadoop"
 # LOG FILE
 export HADOOP_LOG_DIR="/data/hadoop-log-dir"

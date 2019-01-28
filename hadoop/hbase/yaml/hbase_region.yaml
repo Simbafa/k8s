@@ -1,0 +1,160 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  namespace: hadoop     # 设置命名空间
+  name: hbase-region-1
+  labels:
+    app: hbase-region-pod-1
+spec:
+  serviceName: "hbase-region-1"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hbase-region-pod-1
+  template:
+    metadata:
+      labels:
+        app: hbase-region-pod-1
+    spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com  # 镜像拉取秘钥
+      nodeName: k8s-monitor
+      volumes:
+        - hostPath: 
+            path: /hbase/regionserver1/data
+          name: data
+        - hostPath: 
+            path: /hbase/regionserver1/fromhost
+          name: fromhost
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/busybox:1.30
+        command: ["sh", "-c", "until nslookup zookeeper-1; do echo waiting for zookeeper-1; sleep 2; done;"]
+      containers:
+        - name: hbase-region-1
+          image: hub.cloudx5.com/justep/hadoop-hbase:1.0.0
+          imagePullPolicy: Always
+          command: ["/usr/bin/supervisord"]
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
+          volumeMounts:
+            - name: data
+              mountPath: /hbase/data     # 添加挂载
+            - name: fromhost
+              mountPath: /hbase/fromhost
+          ports:
+            - containerPort: 60000
+            - containerPort: 60001
+          env:
+            - name: HBASE_SERVER_TYPE     # hbase角色类型。根据 HBASE_SERVER_TYPE 的取值来确定是启master还是regionserver
+              value: regionserver
+            - name: MASTER_DEBUG    # 是否启动调试模式，启动后，不会自动启动master
+              value: "no"
+            - name: START_THRIFT     # 是否启动thrift
+              value: "yes"
+            - name: HBASE_MASTER_PORT    # hbase的master端口号
+              value: "60000"
+            - name: HBASE_MASTER_INFO_PORT  # hbase的master信息端口号
+              value: "60001"
+            - name: HBASE_REGION_PORT    # hbase的region端口号
+              value: "60010"
+            - name: HBASE_REGION_INFO_PORT   # hbase的region的信息端口号
+              value: "60011"
+            - name: HDFS_SERVICE   # hdfs服务，HDFS_SERVICE为HDFS服务经过skyDNS之后的对应域名，若未设置skyDNS则此处值设为HDFS服务对应的IP地址
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"   # hdfs的集群ip
+            - name: HDFS_PORT   # hdfs端口号
+              value: "8020"
+            - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
+              value: "zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local"   # zookeeper集群ip
+            - name: ZOOKEEPER_PORT   # zookeeper端口号
+              value: "2181"
+            - name: ZNODE_PARENT   # znode_parent
+              value: hbase
+            - name: HBASE_MASTER_LIST  
+              value: "10.96.10.21:hbase-master-1-0"
+            - name: HBASE_REGION_LIST  # 为HBase集群中除当前regionserver外的其余regionserver的服务地址和pod名的对应关系
+              value: "10.96.10.24:hbase-region-2-0"
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  namespace: hadoop     # 设置命名空间
+  name: hbase-region-2
+spec:
+  serviceName: "hbase-region-2"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hbase-region-pod-2
+  template:
+    metadata:
+      labels:
+        app: hbase-region-pod-2
+    spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com   # 镜像拉取秘钥
+      nodeName: k8s-monitor
+      volumes:
+        - hostPath: 
+            path: /hbase/regionserver2/data
+          name: data
+        - hostPath: 
+            path: /hbase/regionserver2/fromhost
+          name: fromhost
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/busybox:1.30
+        command: ["sh", "-c", "until nslookup zookeeper-1; do echo waiting for zookeeper-1; sleep 2; done;"]
+      containers:
+        - name: hbase-region-2
+          image: hub.cloudx5.com/justep/hadoop-hbase:1.0.0
+          imagePullPolicy: Always
+          command: ["/usr/bin/supervisord"]
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
+          volumeMounts:
+            - name: data
+              mountPath: /hbase/data     # 添加挂载
+            - name: fromhost
+              mountPath: /hbase/fromhost
+          ports:
+            - containerPort: 60000
+            - containerPort: 60001
+          env:
+            - name: HBASE_SERVER_TYPE     # hbase角色类型。根据 HBASE_SERVER_TYPE 的取值来确定是启master还是regionserver
+              value: regionserver
+            - name: MASTER_DEBUG    # 是否启动调试模式，启动后，不会自动启动master
+              value: "no"
+            - name: START_THRIFT     # 是否启动thrift
+              value: "yes"
+            - name: HBASE_MASTER_PORT    # hbase的master端口号
+              value: "60000"
+            - name: HBASE_MASTER_INFO_PORT  # hbase的master信息端口号
+              value: "60001"
+            - name: HBASE_REGION_PORT    # hbase的region端口号
+              value: "60010"
+            - name: HBASE_REGION_INFO_PORT   # hbase的region的信息端口号
+              value: "60011"
+            - name: HDFS_SERVICE   # hdfs服务，HDFS_SERVICE为HDFS服务经过skyDNS之后的对应域名，若未设置skyDNS则此处值设为HDFS服务对应的IP地址
+              value: "hdfs-namenode-service.hadoop.svc.cluster.local"   # hdfs的集群ip
+            - name: HDFS_PORT   # hdfs端口号
+              value: "8020"
+            - name: ZOOKEEPER_SERVICE_LIST   # zookeeper列表，域名，同HDFS_SERVICE意义
+              value: "zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local"   # zookeeper集群ip
+            - name: ZOOKEEPER_PORT   # zookeeper端口号
+              value: "2181"
+            - name: ZNODE_PARENT   # znode_parent
+              value: hbase
+            - name: HBASE_MASTER_LIST   # 为HBase集群中除当前master外的其余master的服务地址和pod名的对应关系。格式为 <master服务IP地址>:<master对应Pod名>，多个项之间以空格分隔
+              value: "10.96.10.21:hbase-master-1-0"
+            - name: HBASE_REGION_LIST  # 为HBase集群中除当前regionserver外的其余regionserver的服务地址和pod名的对应关系
+              value: "10.96.10.23:hbase-region-1-0"
+

@@ -6,7 +6,7 @@ fi
 
 sed -i "s!SERVER_PRINCIPAL!$SERVER_PRINCIPAL!g" /opt/zookeeper/conf/jaas.conf
 
-kinit -kt /opt/zookeeper/conf/zookeeper.keytab root/namenode@JUSTEP.COM
+kinit -kt /opt/zookeeper/conf/zookeeper.keytab $SERVER_PRINCIPAL
 klist 
 
 echo "Start installing ldap......"

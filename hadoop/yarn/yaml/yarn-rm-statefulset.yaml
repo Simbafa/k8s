@@ -47,7 +47,7 @@ spec:
       - name: hub.cloudx5.com   # 镜像拉取秘钥
       initContainers:
       - name: dependency-checker
-        image: hub.cloudx5.com/justep/busybox:1.30
+        image: hub.cloudx5.com/busybox:1.30
         command: ["sh", "-c", "until nslookup hdfs-namenode-service; do echo waiting for hdfs-namenode-service; sleep 2; done;"]
       containers:
       - name: yarn-rm
