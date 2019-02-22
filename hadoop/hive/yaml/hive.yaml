@@ -17,14 +17,6 @@ spec:
       imagePullSecrets:       # 远程拉取镜像，需要拉取秘钥。要先在你的k8s上创建秘钥
       - name: hub.cloudx5.com
       nodeName: k8s-node2     # 根据node的名称选择主机。
-      initContainers:
-      - name: dependency-checker
-        image: hub.cloudx5.com/busybox:1.30
-        command: ["sh", "-c", "until nslookup hdfs-namenode-service; do echo waiting for hdfs-namenode-service; sleep 2; done;"]
-      initContainers:
-      - name: dependency-checker
-        image: hub.cloudx5.com/busybox:1.30
-        command: ["sh", "-c", "until nslookup hive-metadata-mysql-service; do echo waiting for hive-metadata-mysql; sleep 2; done;"]
       containers:
         - name: hive
           image: hub.cloudx5.com/justep/hive:1.0.0
@@ -44,7 +36,7 @@ spec:
               memory: "1024Mi"
               cpu: "100m"
             limits:
-              memory: "2048Mi"
+              memory: "4096Mi"
               cpu: "4000m"
           env:
             - name: LDAP_HOST
@@ -54,7 +46,7 @@ spec:
             - name: JOBHISTORY_WEBAPP_ADDRESS
               value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "hdfs-namenode-service.hadoop.svc.cluster.local"     # 设置namenode的ip
+              value: "hdfs-namenode-svc.hadoop.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"           # 设置namenode的端口号
             - name: MY_CPU_LIMIT
@@ -84,7 +76,7 @@ apiVersion: v1
 metadata:
   labels:
     app: hive
-  name: hive-service
+  name: hive-svc
   namespace: hadoop
 spec:
   ports:

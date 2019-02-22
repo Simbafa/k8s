@@ -6,6 +6,8 @@ USER root
 
 # tools
 RUN export DEBIAN_FRONTEND=noninteractive && \
+    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
     apt-get update -y && \
     apt-get install -y -q wget curl sudo supervisor krb5-user libpam-krb5 libpam-ccreds jsvc vim libcap2 net-tools iputils-ping iproute2
 

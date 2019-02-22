@@ -32,10 +32,6 @@ spec:
       terminationGracePeriodSeconds: 0
       imagePullSecrets:
       - name: hub.cloudx5.com   # 镜像拉取秘钥
-      initContainers:
-      - name: dependency-checker
-        image: hub.cloudx5.com/busybox:1.30
-        command: ["sh", "-c", "until nslookup hdfs-namenode-service; do echo waiting for hdfs-namenode-service; sleep 2; done;"]
       containers:
       - name: yarn-nm
         image: hub.cloudx5.com/justep/yarn-nm-spark:1.0.0
@@ -54,7 +50,7 @@ spec:
             memory: "1024Mi"
             cpu: "100m"
           limits:
-            memory: "2048Mi"
+            memory: "4096Mi"
             cpu: "4000m"
         env:
           - name: JOBHISTORY_ADDRESS
@@ -62,7 +58,7 @@ spec:
           - name: JOBHISTORY_WEBAPP_ADDRESS
             value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:19888
           - name: HDFSNAMENODERPC_SERVICE_HOST
-            value: "hdfs-namenode-service.hadoop.svc.cluster.local"     # 设置namenode的ip
+            value: "hdfs-namenode-svc.hadoop.svc.cluster.local"     # 设置namenode的ip
           - name: HDFSNAMENODERPC_SERVICE_PORT
             value: "8020"           # 设置namenode的端口号
           - name: MY_CPU_LIMIT

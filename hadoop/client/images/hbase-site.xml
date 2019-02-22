@@ -23,7 +23,7 @@
     </property>
     <property>
       <name>hbase.rootdir</name>
-      <value>hdfs://hdfs-namenode-service.hadoop.svc.cluster.local:8020/hbase</value>
+      <value>hdfs://hdfs-namenode-svc.hadoop.svc.cluster.local:8020/hbase</value>
     </property>
     <property>
       <name>hbase.zookeeper.quorum</name>

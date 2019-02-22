@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "$HBASE_SERVER_TYPE" = "master" ]; then
+   kinit -kt /hbase/conf/hbase.keytab root/hbase-master-1@JUSTEP.COM
+elif [ "$HBASE_SERVER_TYPE" = "regionserver" ]; then
+   kinit -kt /hbase/conf/hbase.keytab root/hbase-region-1@JUSTEP.COM
+fi
+klist 
+
 if [ -f "/hbase/fromhost/pre-run.sh" ]; then
     source /hbase/fromhost/pre-run.sh
 fi

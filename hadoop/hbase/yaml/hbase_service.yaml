@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hbase-master-1-0
+  name: hbase-master-1
   namespace: hadoop     # 设置命名空间
 spec:
   selector:
@@ -16,12 +16,11 @@ spec:
     - name: thrift
       port: 9090           #　thrift服务器ip，让外界通过thrift来访问hbase
       targetPort: 9090
-  clusterIP: 10.96.10.21
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: hbase-region-1-0
+  name: hbase-region-1
   namespace: hadoop     # 设置命名空间
 spec:
   selector:
@@ -33,12 +32,11 @@ spec:
     - name: info
       port: 60001            # hbase运行状态的网页查询端口
       targetPort: 60001
-  clusterIP: 10.96.10.23
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: hbase-region-2-0
+  name: hbase-region-2
   namespace: hadoop     # 设置命名空间
 spec:
   selector:
@@ -50,5 +48,4 @@ spec:
     - name: info
       port: 60001            # hbase运行状态的网页查询端口
       targetPort: 60001
-  clusterIP: 10.96.10.24
 

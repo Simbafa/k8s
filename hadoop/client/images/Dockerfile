@@ -6,6 +6,8 @@ FROM ubuntu:18.04
 USER root
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
+    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
     apt-get update -y && \
     apt-get install -y -q curl krb5-user libpam-krb5 libpam-ccreds vim libcap2 net-tools iputils-ping iproute2 openssh-server
 
@@ -60,12 +62,17 @@ ENV PATH $PATH:/usr/local/hive/bin
 WORKDIR /usr/local
 
 # -Dsun.security.krb5.debug=true
-
+ADD README /
 ADD bootstrap.sh /bootstrap.sh
 RUN chmod a+x /bootstrap.sh
 ENTRYPOINT /bootstrap.sh 
 
-#RUN echo 'root:root' | chpasswd
+ADD env.sh /env.sh
+RUN chmod a+x /env.sh
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN echo "" >> /etc/profile
+RUN echo "source /env.sh" >> /etc/profile
+RUN echo 'root:justep@2' | chpasswd
 
 EXPOSE 22
 

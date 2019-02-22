@@ -39,7 +39,7 @@ spec:
             - name: JOBHISTORY_WEBAPP_ADDRESS
               value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "hdfs-namenode-service.hadoop.svc.cluster.local"     # 设置namenode的ip
+              value: "hdfs-namenode-svc.hadoop.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
               value: "8020"           # 设置namenode的端口号
             - name: MY_CPU_LIMIT

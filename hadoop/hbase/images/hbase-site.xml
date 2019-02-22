@@ -6,6 +6,10 @@
       <value>true</value>
     </property>
     <property>
+      <name>hbase.unsafe.stream.capability.enforce</name>
+      <value>false</value>
+    </property>
+    <property>
       <name>hbase.master.port</name>
       <value>@HBASE_MASTER_PORT@</value>
     </property>

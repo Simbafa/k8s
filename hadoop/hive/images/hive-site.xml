@@ -135,10 +135,6 @@
     <value>spark</value>
   </property>
   <property>
-    <name>hive.enable.spark.execution.engine</name>
-    <value>true</value>
-  </property>
-  <property>
     <name>spark.serializer</name>
     <value>org.apache.spark.serializer.KryoSerializer</value>
   </property>
@@ -157,5 +153,64 @@
   <property>
     <name>spark.submit.deployMode</name> 
     <value>client</value> 
+  </property>
+  <!--property>
+    <name>spark.driver.memory</name>
+    <value>2G</value>
+  </property>
+  <property>
+    <name>spark.executor.memory</name>
+    <value>2G</value>
+  </property-->
+
+  <property>
+    <name>hive.server2.thrift.min.worker.threads</name>
+    <value>5</value>
+  </property>
+  <property>
+    <name>hive.server2.thrift.max.worker.threads</name>
+    <value>100</value>
+  </property>
+  <property>
+    <name>fs.hdfs.impl.disable.cache</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.support.concurrency</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.threads</name>
+    <value>100</value>
+  </property>
+  <property>
+    <name>hive.orc.cache.stripe.details.size</name>
+    <value>1000</value>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.wait.queue.size</name>
+    <value>10</value>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.shutdown.timeout</name>
+    <value>10</value>
+    <description>Time (in seconds) for which HiveServer2 shutdown will wait for async threads to terminate</description>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.keepalive.time</name>
+    <value>10</value>
+    <description>Time (in seconds) that an idle HiveServer2 async thread (from the thread pool) will wait for a new task to arrive before terminating</description>
+  </property>
+  <property>
+     <name>hive.zookeeper.quorum</name>
+     <value>zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local</value>
+  </property>
+  <property>
+    <name>hive.zookeeper.client.port</name>
+    <value>2181</value>
+  </property>
+  <property>
+    <name>hive.zookeeper.session.timeout</name>
+    <value>30000</value>
   </property>
 </configuration>
