@@ -15,12 +15,12 @@
     <value>JOBHISTORY_WEBAPP_ADDRESS</value>
   </property>
 
-  <!--property>
+  <property>
     <name>mapreduce.jobhistory.keytab</name>
     <value>/etc/hadoop/yarn.keytab</value>
   </property>
   <property>
     <name>mapreduce.jobhistory.principal</name>
     <value>root/mapreduce@JUSTEP.COM</value>
-  </property-->
+  </property>
 </configuration>

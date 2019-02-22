@@ -6,13 +6,14 @@ fi
 
 sed -i "s!SERVER_PRINCIPAL!$SERVER_PRINCIPAL!g" /opt/zookeeper/conf/jaas.conf
 
-kinit -kt /opt/zookeeper/conf/zookeeper.keytab root/namenode@JUSTEP.COM
+kinit -kt /opt/zookeeper/conf/zookeeper.keytab $SERVER_PRINCIPAL
 klist 
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
-export JVMFLAGS="-Djava.security.auth.login.config=/opt/zookeeper/conf/jaas.conf"
+export SERVER_JVMFLAGS="-Djava.security.auth.login.config=/opt/zookeeper/conf/jaas.conf"
 
 echo "$SERVER_ID / $MAX_SERVERS" 
 if [ ! -z "$SERVER_ID" ] && [ ! -z "$MAX_SERVERS" ]; then

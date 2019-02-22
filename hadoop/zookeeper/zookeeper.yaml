@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-1
-  namespace: cloudai-2     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
   labels:
       name: zookeeper-1
 spec:
@@ -21,14 +21,13 @@ spec:
     name: zookeeper
     server-id: "1"
   type: ClusterIP          # 只能集群内部访问
-  clusterIP: 10.96.9.11    # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-2
-  namespace: cloudai-2     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
   labels:
       name: zookeeper-2
 spec:
@@ -46,14 +45,13 @@ spec:
     name: zookeeper
     server-id: "2"
   type: ClusterIP
-  clusterIP: 10.96.9.12   # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper-3
-  namespace: cloudai-2     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
   labels:
       name: zookeeper-3
 spec:
@@ -71,14 +69,13 @@ spec:
     name: zookeeper
     server-id: "3"
   type: ClusterIP
-  clusterIP: 10.96.9.13  # 指定服务的集群ip，必须保障可用并且没有被占用
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: zookeeper-1
-  namespace: cloudai-2     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -104,17 +101,27 @@ spec:
       imagePullSecrets:
       - name: hub.cloudx5.com
       nodeName: k8s-node1
+      initContainers:
+      - name: dependency-checker
+        image: hub.cloudx5.com/justep/alphine-curl:1.0.0
+        command: ['sh', '-c', "curl --connect-timeout 3 --max-time 5 --retry 10 --retry-delay 5 --retry-max-time 60 ldap-1:389"]
       containers:
         - name: server
           image: hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           env:
             - name: SERVER_ID
               value: "1"
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.9.11@JUSTEP.COM"
+              value: "zookeeper/zookeeper-1.hadoop.svc.cluster.local@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888
@@ -132,7 +139,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: zookeeper-2
-  namespace: cloudai-2     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -162,13 +169,19 @@ spec:
         - name: server
           image: hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           env:
             - name: SERVER_ID
               value: "2"
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.9.12@JUSTEP.COM"
+              value: "zookeeper/zookeeper-2.hadoop.svc.cluster.local@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888
@@ -186,7 +199,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: zookeeper-3
-  namespace: cloudai-2     # 设置命名空间
+  namespace: hadoop     # 设置命名空间
 spec:
   selector:    
     matchLabels:
@@ -216,13 +229,19 @@ spec:
         - name: server
           image: hub.cloudx5.com/justep/hbase-zookeeper:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           env:
             - name: SERVER_ID
               value: "3"
             - name: MAX_SERVERS
               value: "3"
             - name: SERVER_PRINCIPAL 
-              value: "zookeeper/10.96.9.13@JUSTEP.COM"
+              value: "zookeeper/zookeeper-3.hadoop.svc.cluster.local@JUSTEP.COM"
           ports:
             - containerPort: 2181
             - containerPort: 2888

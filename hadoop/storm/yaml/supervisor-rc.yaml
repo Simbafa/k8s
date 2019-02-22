@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: apache-storm-supervisor
+  namespace: hadoop
+spec:
+  replicas: 1
+  selector:
+    storm: supervisor
+  template:
+    metadata:
+      labels:
+        storm: supervisor
+        app: storm
+    spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com
+      containers:
+      - name: storm-supervisor
+        image: hub.cloudx5.com/justep/storm:1.0.0
+        imagePullPolicy: Always
+        env:
+        - name: ZOOKEEPER_SERVERS
+          value: "zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local"
+        - name: NIMBUS_SEEDS
+          value: "10.96.100.31"
+        - name: STORM_CMD
+          value: "supervisor"
+        volumeMounts:
+        - name: storm-data
+          mountPath: /usr/local/apache-storm/data
+      volumes:
+      - name: storm-data
+        emptyDir: {}
+

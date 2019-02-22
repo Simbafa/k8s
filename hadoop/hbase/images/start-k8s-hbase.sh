@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "$HBASE_SERVER_TYPE" = "master" ]; then
+   kinit -kt /hbase/conf/hbase.keytab root/hbase-master-1@JUSTEP.COM
+elif [ "$HBASE_SERVER_TYPE" = "regionserver" ]; then
+   kinit -kt /hbase/conf/hbase.keytab root/hbase-region-1@JUSTEP.COM
+fi
+klist 
+
 if [ -f "/hbase/fromhost/pre-run.sh" ]; then
     source /hbase/fromhost/pre-run.sh
 fi
@@ -30,7 +37,8 @@ do
 done
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
 ##启动master和region在同一个node上，尽在master节点上启动即可，会自动寻找
 #if [ "$MASTER_DEBUG" == "no" ]; then
@@ -44,11 +52,12 @@ echo "Start installing ldap......"
 if [ "$HBASE_SERVER_TYPE" = "master" ]; then
  
    if [ "$MASTER_DEBUG" == "no" ]; then
-    /hbase/bin/hbase master start > logmaster.log 2>&1
-   /hbase/bin/hbase-daemon.sh start thrift
-   fi
-   if [ "$START_THRIFT" == "yes" ]; then
-      /hbase/bin/hbase-daemons.sh start thrift2 > logthrift.log 2>&1
+      /hbase/bin/hbase master start > logmaster.log 2>&1
+      if [ "$START_THRIFT" == "yes" ]; then
+          echo "Start thrift server"
+          /hbase/bin/hbase-daemon.sh start thrift > logthrift.log 2>&1
+          #/hbase/bin/hbase-daemons.sh start thrift2 > logthrift.log 2>&1
+      fi
    fi
 elif [ "$HBASE_SERVER_TYPE" = "regionserver" ]; then
     /hbase/bin/hbase regionserver start > logregion.log 2>&1

@@ -1,0 +1,19 @@
+  <configuration>
+      <property>
+          <name>fs.defaultFS</name>
+          <value>hdfs://hdfs-namenode-svc.hadoop.svc.cluster.local:8020</value>
+      </property>
+      <property>
+          <name>hadoop.proxyuser.hduser.groups</name>
+          <value>*</value>
+      </property>
+      <property>
+         <name>hadoop.security.authentication</name>
+         <value>kerberos</value>
+      </property>
+      <property>
+         <name>hadoop.security.authorization</name>
+         <value>true</value>
+      </property>
+  </configuration>
+

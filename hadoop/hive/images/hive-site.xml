@@ -1,7 +1,7 @@
 <configuration>
   <property>
     <name>fs.permissions.umask-mode</name>
-    <value>022</value>
+    <value>066</value>
   </property>
   <property>
     <name>hive.server2.enable.doAs</name>
@@ -20,7 +20,7 @@
   <!--property>
     <name>hive.server2.authentication</name>
     <value>kerberos</value>
-  </property>
+  </property-->
   <property>
     <name>hive.metastore.sasl.enabled</name>
     <value>true</value>
@@ -53,7 +53,7 @@
   <property> 
     <name>hive.server2.authentication.ldap.baseDN</name> 
     <value>ou=hive,dc=justep,dc=com</value> 
-  </property--> 
+  </property> 
 
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
@@ -72,27 +72,67 @@
     <value>com.mysql.jdbc.Driver</value>
   </property>
 
-  <!--property>
+  <property>
+    <name>hive.metastore.authorization.storage.checks</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.metastore.execute.setugi</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.metastore.pre.event.listeners</name>
+    <value></value>
+    <!--value>org.apache.hadoop.hive.ql.security.authorization.AuthorizationPreEventListener</value-->
+  </property>
+  <property>
+    <name>hive.security.metastore.authorization.manager</name>
+    <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
+  </property>
+  <property>
+    <name>hive.security.metastore.authenticator.manager</name>
+    <value>org.apache.hadoop.hive.ql.security.HadoopDefaultMetastoreAuthenticator</value>
+  </property>
+  <property>
+    <name>hive.security.metastore.authorization.auth.reads</name>
+    <value>true</value>
+  </property>
+  <property>
     <name>hive.security.authorization.enabled</name>
     <value>true</value>
-    <description>enableor disable the hive clientauthorization</description>
   </property>
   <property>
     <name>hive.security.authorization.createtable.owner.grants</name>
     <value>ALL</value>
-    <description>theprivileges automatically granted to the ownerwhenever a table gets created. Anexample like "select,drop" willgrant select and drop privilege to theowner of the table</description>
+  </property>
+  <property>
+    <name>hive.aux.jars.path</name>
+    <value>file:///usr/local/hive/lib/HiveAdmin-1.0.0.jar</value>
+  </property>
+  <property>
+    <name>hive.server2.enable.doAs</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>hive.users.in.admin.role</name>
+    <value>admin</value>
+  </property>
+  <property>
+    <name>hive.security.authorization.manager</name> 
+    <value>org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdHiveAuthorizerFactory</value>
+  </property>
+  <property>
+    <name>hive.security.authenticator.manager</name> 
+    <value>org.apache.hadoop.hive.ql.security.SessionStateUserAuthenticator</value>
   </property>
   <property>
     <name>hive.semantic.analyzer.hook</name>
-    <value>com.hive.HiveAdmin</value>
-  </property-->
+    <value>com.justep.hive.HiveAdmin</value>
+  </property>
+
   <property>
     <name>hive.execution.engine</name>
     <value>spark</value>
-  </property>
-  <property>
-    <name>hive.enable.spark.execution.engine</name>
-    <value>true</value>
   </property>
   <property>
     <name>spark.serializer</name>
@@ -100,7 +140,7 @@
   </property>
   <property> 
     <name>hive.spark.job.monitor.timeout</name>
-    <value>180s</value>
+    <value>300s</value>
   </property>
   <property>
     <name>spark.home</name>
@@ -113,5 +153,64 @@
   <property>
     <name>spark.submit.deployMode</name> 
     <value>client</value> 
+  </property>
+  <!--property>
+    <name>spark.driver.memory</name>
+    <value>2G</value>
+  </property>
+  <property>
+    <name>spark.executor.memory</name>
+    <value>2G</value>
+  </property-->
+
+  <property>
+    <name>hive.server2.thrift.min.worker.threads</name>
+    <value>5</value>
+  </property>
+  <property>
+    <name>hive.server2.thrift.max.worker.threads</name>
+    <value>100</value>
+  </property>
+  <property>
+    <name>fs.hdfs.impl.disable.cache</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.support.concurrency</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.threads</name>
+    <value>100</value>
+  </property>
+  <property>
+    <name>hive.orc.cache.stripe.details.size</name>
+    <value>1000</value>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.wait.queue.size</name>
+    <value>10</value>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.shutdown.timeout</name>
+    <value>10</value>
+    <description>Time (in seconds) for which HiveServer2 shutdown will wait for async threads to terminate</description>
+  </property>
+  <property>
+    <name>hive.server2.async.exec.keepalive.time</name>
+    <value>10</value>
+    <description>Time (in seconds) that an idle HiveServer2 async thread (from the thread pool) will wait for a new task to arrive before terminating</description>
+  </property>
+  <property>
+     <name>hive.zookeeper.quorum</name>
+     <value>zookeeper-1.hadoop.svc.cluster.local,zookeeper-2.hadoop.svc.cluster.local,zookeeper-3.hadoop.svc.cluster.local</value>
+  </property>
+  <property>
+    <name>hive.zookeeper.client.port</name>
+    <value>2181</value>
+  </property>
+  <property>
+    <name>hive.zookeeper.session.timeout</name>
+    <value>30000</value>
   </property>
 </configuration>

@@ -6,6 +6,10 @@
       <value>true</value>
     </property>
     <property>
+      <name>hbase.unsafe.stream.capability.enforce</name>
+      <value>false</value>
+    </property>
+    <property>
       <name>hbase.master.port</name>
       <value>@HBASE_MASTER_PORT@</value>
     </property>
@@ -39,7 +43,7 @@
     </property>
     <property>
        <name>hbase.coprocessor.master.classes</name>
-       <value>org.apache.hadoop.hbase.rsgroup.RSGroupAdminEndpoint</value>
+       <value>org.apache.hadoop.hbase.security.access.AccessController, org.apache.hadoop.hbase.rsgroup.RSGroupAdminEndpoint</value>
     </property>
     <property>
       <name>hbase.master.loadbalancer.class</name>
@@ -78,5 +82,34 @@
     <property>
       <name>hbase.coprocessor.region.classes</name>
       <value>org.apache.hadoop.hbase.security.access.AccessController, org.apache.hadoop.hbase.security.token.TokenProvider</value>
+    </property>
+
+    <property>
+      <name>hbase.security.authorization</name>
+      <value>true</value>
+    </property>
+    <property> 
+      <name>hbase.superuser</name>
+      <value>root</value>
+    </property>
+    <property>
+      <name>hbase.thrift.support.proxyuser</name>
+      <value>true</value>
+    </property>
+    <property>
+      <name>hbase.regionserver.thrift.http</name>
+      <value>true</value>
+    </property>
+    <property>
+      <name>hbase.thrift.kerberos.principal</name>
+      <value>root/_HOST@JUSTEP.COM</value>
+    </property>
+    <property>
+      <name>hbase.thrift.keytab.file</name>
+      <value>/hbase/conf/hbase.keytab</value>
+    </property>
+    <property>
+      <name>hbase.regionserver.thrift.http</name>
+      <value>true</value>
     </property>
   </configuration>

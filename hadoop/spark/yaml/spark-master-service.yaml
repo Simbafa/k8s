@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: spark-master
-  namespace: cloudai-2
+  namespace: hadoop
 spec:
   ports:
     - port: 7077

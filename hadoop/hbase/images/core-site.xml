@@ -1,7 +1,7 @@
   <configuration>
       <property>
           <name>fs.defaultFS</name>
-          <value>hdfs://10.96.0.5:4231</value>
+          <value>hdfs://hdfs-namenode-svc.hadoop.svc.cluster.local:8020</value>
       </property>
       <property>
          <name>hadoop.security.authentication</name>
@@ -10,6 +10,14 @@
       <property>
          <name>hadoop.security.authorization</name>
          <value>true</value>
+      </property>
+      <property>
+         <name>hadoop.proxyuser.root.hosts</name>
+         <value>*</value>
+      </property>
+      <property>
+         <name>hadoop.proxyuser.root.groups</name>
+         <value>*</value>
       </property>
   </configuration>
 

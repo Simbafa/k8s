@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hive
-  namespace: cloudai-2
+  namespace: hadoop
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -21,6 +21,12 @@ spec:
         - name: hive
           image: hub.cloudx5.com/justep/hive:1.0.0
           imagePullPolicy: Always
+          livenessProbe: 
+              exec: 
+                  command: ["kinit", "-R"]
+              initialDelaySeconds: 300 
+              timeoutSeconds: 5 
+              periodSeconds: 1800 
           ports:
             - containerPort: 10000
             - containerPort: 10002
@@ -30,19 +36,19 @@ spec:
               memory: "1024Mi"
               cpu: "100m"
             limits:
-              memory: "2048Mi"
+              memory: "4096Mi"
               cpu: "4000m"
           env:
             - name: LDAP_HOST
-              value: 10.96.100.1:389
+              value: ldap-1.hadoop.svc.cluster.local:389
             - name: JOBHISTORY_ADDRESS
-              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:10020
+              value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:10020
             - name: JOBHISTORY_WEBAPP_ADDRESS
-              value: yarn-rm-0.yarn-rm.yarn-cluster.svc.cluster.local:19888
+              value: yarn-rm-0.yarn-rm.hadoop.svc.cluster.local:19888
             - name: HDFSNAMENODERPC_SERVICE_HOST
-              value: "10.96.0.5"     # 设置namenode的ip
+              value: "hdfs-namenode-svc.hadoop.svc.cluster.local"     # 设置namenode的ip
             - name: HDFSNAMENODERPC_SERVICE_PORT
-              value: "4231"           # 设置namenode的端口号
+              value: "8020"           # 设置namenode的端口号
             - name: MY_CPU_LIMIT
               valueFrom:
                 resourceFieldRef:
@@ -70,8 +76,8 @@ apiVersion: v1
 metadata:
   labels:
     app: hive
-  name: hive-service
-  namespace: cloudai-2
+  name: hive-svc
+  namespace: hadoop
 spec:
   ports:
     - port: 10000

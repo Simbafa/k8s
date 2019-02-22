@@ -60,7 +60,7 @@
     </value>
   </property>
 
-  <!--property>
+  <property>
     <name>yarn.resourcemanager.keytab</name>
     <value>/etc/hadoop/yarn.keytab</value>
   </property>
@@ -84,7 +84,7 @@
     <name>yarn.nodemanager.linux-container-executor.group</name>
     <value>root</value>
   </property>
-  <property>
+  <!--property>
     <name>yarn.web-proxy.principal</name>
     <value>root/yarn-rm@JUSTEP.COM</value>
   </property>

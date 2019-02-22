@@ -7,7 +7,7 @@
           <name>hadoop.proxyuser.hduser.groups</name>
           <value>*</value>
       </property>
-      <!--property>
+      <property>
          <name>hadoop.security.authentication</name>
          <value>kerberos</value>
       </property>
@@ -22,7 +22,7 @@
       </property>
       <property>
         <name>hadoop.security.group.mapping.ldap.url</name>
-        <value>ldap://10.96.100.1:389</value>
+        <value>ldap://ldap-1.hadoop.svc.cluster.local:389</value>
       </property>
       <property>
         <name>hadoop.security.group.mapping.ldap.bind.user</name>
@@ -62,6 +62,14 @@
       </property>
 
       <property>
+        <name>hadoop.proxyuser.root.hosts</name>
+        <value>*</value>
+      </property>
+      <property>
+        <name>hadoop.proxyuser.root.groups</name>
+        <value>*</value>
+      </property>
+      <property>
         <name>hadoop.proxyuser.hive.hosts</name>
         <value>*</value>
       </property>
@@ -84,6 +92,6 @@
       <property>
         <name>hadoop.proxyuser.HTTP.groups</name>
         <value>*</value>
-      </property-->
+      </property>
   </configuration>
 

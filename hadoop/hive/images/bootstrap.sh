@@ -18,13 +18,15 @@ cat /etc/hadoop/core-site.xml
 
 sed -i "s/JOBHISTORY_ADDRESS/$JOBHISTORY_ADDRESS/;s/JOBHISTORY_WEBAPP_ADDRESS/$JOBHISTORY_WEBAPP_ADDRESS/" /etc/hadoop/mapred-site.xml
 sed -i "s/MY_MEM_LIMIT/$MY_MEM_LIMIT/;s/MY_CPU_LIMIT/$MY_CPU_LIMIT/" /etc/hadoop/yarn-site.xml
+sed -i "s/LDAP_HOST/$LDAP_HOST/" /usr/local/hive/conf/hive-site.xml
 
 # log dir
 mkdir -p /data/hadoop-log-dir
 mkdir -p /data/yarn-log-dir
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
 cd /etc/hadoop/fromhost
 # initSchema
@@ -32,7 +34,8 @@ if [ ! -f /etc/hadoop/fromhost/hive_metastore_initialized ]; then
    $HADOOP_HOME/bin/hadoop fs -mkdir -p /tmp
    $HADOOP_HOME/bin/hadoop fs -mkdir -p /user/hive/warehouse
    $HADOOP_HOME/bin/hadoop fs -chmod -R 777 /tmp
-   $HADOOP_HOME/bin/hadoop fs -chmod g+w /user/hive/warehouse
+   $HADOOP_HOME/bin/hadoop fs -chmod -R 711 /user/hive
+   $HADOOP_HOME/bin/hadoop fs -chown -R hive /user/hive
    $HIVE_HOME/bin/schematool -dbType mysql -initSchema --verbose &> /etc/hadoop/fromhost/hive_metastore_initialized
 fi
 
@@ -40,5 +43,7 @@ kinit -kt /usr/local/hive/conf/hive.keytab hive/hive@JUSTEP.COM
 klist 
 
 $HIVE_HOME/bin/hive --service metastore &
-$HIVE_HOME/bin/hive --service hiveserver2
+$HIVE_HOME/bin/hive --service hiveserver2 --hiveconf hive.mapred.mode=strict --hiveconf hive.orc.cache.stripe.details.size=1000 --hiveconf mapred.reduce.tasks=64 --hiveconf hive.server2.active.passive.ha.enable=true
 
+# test
+# ./bin/beeline -u "jdbc:hive2://localhost:10000" -n hive -p hive

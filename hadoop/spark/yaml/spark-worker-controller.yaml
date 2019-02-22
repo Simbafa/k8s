@@ -2,7 +2,7 @@ kind: ReplicationController
 apiVersion: v1
 metadata:
   name: spark-worker-controller
-  namespace: cloudai-2
+  namespace: hadoop
 spec:
   replicas: 2
   selector:
@@ -12,9 +12,12 @@ spec:
       labels:
         component: spark-worker
     spec:
+      imagePullSecrets:
+      - name: hub.cloudx5.com   # 镜像拉取秘钥
       containers:
         - name: spark-worker
           image: hub.cloudx5.com/justep/spark:1.0.0
+          imagePullPolicy: Always
           command: ["/start-worker"]
           ports:
             - containerPort: 8081

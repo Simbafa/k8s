@@ -20,8 +20,10 @@ mkdir -p /data/hadoop-log-dir
 mkdir -p /data/yarn-log-dir
 
 echo "Start installing ldap......"
-/install_ldap.sh
+#/install_ldap.sh
+/etc/init.d/nscd restart  
 
+ chmod 644 /etc/hadoop/* 
 . /libexec/yarn-config.sh
 /sbin/yarn-daemon.sh --config $YARN_CONF_DIR  start nodemanager
 

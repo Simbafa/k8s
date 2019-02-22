@@ -6,7 +6,7 @@
 # This file should be world readable but not world writable.
 
 BASE	dc=justep,dc=com
-URI	ldap://10.96.100.1:389
+URI	ldap://ldap-1.hadoop.svc.cluster.local:389
 
 #SIZELIMIT	12
 #TIMELIMIT	15

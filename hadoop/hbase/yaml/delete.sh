@@ -1,4 +1,4 @@
 #/bin/sh
 
-kubectl delete pod -n cloudai-2 hbase-master-1 hbase-region-1 hbase-region-2
+kubectl delete pod -n hadoop hbase-master-1 hbase-region-1 hbase-region-2
 

@@ -7,7 +7,7 @@ USER root
 ENV ZOOKEEPER_VERSION 3.4.10
 EXPOSE 2181 2888 3888
 
-RUN wget -q -O - http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz | tar -xzf - -C /opt \
+RUN curl -L --user x5:x5 ftp://192.168.0.254:6021/docker-bin-files/hadoop/zookeeper-${ZOOKEEPER_VERSION}.tar.gz | tar -xzf - -C /opt \
     && mv /opt/zookeeper-${ZOOKEEPER_VERSION} /opt/zookeeper \
     && cp /opt/zookeeper/conf/zoo_sample.cfg /opt/zookeeper/conf/zoo.cfg \
     && mkdir -p /opt/zookeeper/{data,log}
